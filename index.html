@@ -5,22 +5,83 @@
     <meta charset=utf-8/>
     <link rel="stylesheet" type="text/css" href="style.css">
 
-    <title>TODO: Add short title here</title>
+    <title>Netlfix Movie Genre Popularity </title>
 </head>
 
 
 <body>
 
-    <h1>TODO: Add project title here</h1>
+    <h1>Analysis of Netflix Movie Genre Popularity in the United States</h1>
 
     <div>
         <h2>Motivation</h2>
-        TODO: Add motivation / use case here 
+        The rise of streaming platforms like Netflix has led to an explosion
+        in the number of movies and TV shows available to the public. With
+        so much content to choose from, it can be overwhelming for viewers
+        to make informed decisions about what to watch. Our visualization
+        tool aims to address this problem by providing users with a way to
+        better understand the landscape of film and TV ratings and genres
+        throughout the years. By visualizing data about the Motion Picture
+        Association rating system, as well as genre and release year informa-
+        tion, our tool will help users make more informed decisions about
+        what to watch.
+        
+        Our tool is designed for movie enthusiasts and the general public
+        who are interested in understanding the history and evolution of film
+        and TV culture. It will support two domain tasks: identifying which
+        genres tend to generate certain ratings and analyzing movie and
+        TV show ratings throughout the years. By supporting these tasks,
+        our tool will enable users to better understand the cultural trends
+        and shifts in the film and TV industry, and make more informed
+        decisions about what movies and TV shows to watch. 
+
+        This visualization tool will cater to movie enthusiasts and the general
+        public to better illustrate the progression of movie and TV show
+        ratings throughout the years, as well as Motion Picture Association
+        ratings and general film and TV show genres available on Netflix.
+        The tool will be able to display to the user the movie name, release
+        year, ratings, genre, and more. The user will also be able to interact
+        with the plot to zoom in on certain periods of interest, as well as
+        being able to select desired filters. By using this tool, the public
+        will be able to get a better understanding of the Motion Picture
+        Association rating system, as well as movie culture shifts throughout
+        the years.
     </div>
 
     <div>
         <h2>Background</h2>
-        TODO: Add link to report, demo video, link to data etc. here  
+       
+        <h3>Data</h3>
+        The selected data comes from Kaggle, and is a compiled
+        list of Netflix movies and TV shows, with related vari-
+        ables such as cast, director, release date, ratings, and more
+        (https://www.kaggle.com/datasets/shivamb/netflix-shows). There
+        are no inherent biases in the dataset, other than not knowing the
+        credibility of the Kaggle user who compiled the data. Ethical consid-
+        erations could be social responsibility, however, there is no personal
+        user data and the societal impacts of this dataset are low ethically
+        speaking.
+
+        To clean the dataset, we used Python to sift through missing
+        values and omit unnecessary data.
+        Additionally, rows with null values were dropped. 
+        We then filtered the data such that the only
+        country included with data was the United States. These steps
+        brought the row count from around 8,000, to roughly 1800. For
+        consistency purposes, The date column was then transformed into a
+        proper datetime format. The word ‘minutes’ was also removed from
+        this column in order to have a cleaner appearance. A new column
+        for complexity was also added based on the original description
+        column, using the automated rate-ability index, roughly based on
+        the character length of the description column. Then, the description
+        column was dropped, as it would not be relevant for our analyses
+        purposes. Finally, originally the “listed in” column, referring to the
+        genre, was just a singular column that contained one or more genres
+        that the project was listed in. To better be able to manipulate the
+        data, we found every type of genre listed in the rows, and created its
+        own column based on those findings. The new rows now show a 1
+        or 0 (yes or no), if it was listed in that specific genre or not. After
+        cleaning, there were no unexpected values or outliers
     </div>
 
     <div>
