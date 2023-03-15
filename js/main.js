@@ -23,3 +23,5 @@ function build_vis(){
     console.log(data.length)
   });
 }
+
+build_vis();
