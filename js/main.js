@@ -17,9 +17,9 @@ function build_vis(){
   
     // reset graph if new points are being added 
   document.getElementById("spsvg").innerHTML = '';
-  d3.csv("finished.csv").then((data) => {
+  d3.csv("project-joey-nicole-john-sanjo/finished.csv").then((data) => {
     
     // get data from page
-    console.log(data)
+    console.log(data.length)
   });
 }
