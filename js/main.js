@@ -28,7 +28,7 @@ function display_rows(){
   });
 }
 
-function build_scatter_plot(addpoints, newdata) {
+function build_line_plot(addpoints, newdata) {
 
     d3.csv("line.csv").then((data) => {
 
@@ -111,7 +111,6 @@ function build_scatter_plot(addpoints, newdata) {
     .attr("x", VIS_WIDTH/2)
     .attr("y", 20)
     .style("text-anchor", "middle")
-    .text("Movies Released Per Year By Rating");
 
     //Create X axis label   
     FRAME1.append("text")
@@ -133,37 +132,110 @@ function build_scatter_plot(addpoints, newdata) {
     });
   }
 
-  build_scatter_plot()
+  build_line_plot();
+
+  //build frame for bar chart
+const FRAME2 = d3.select("#vis2") 
+.append("svg") 
+.attr("height", FRAME_HEIGHT)   
+.attr("width", FRAME_WIDTH)
+.attr("class", "frame"); 
+
+function build_interactive_barchart() {
+  //build bar plot inside of .then
+  d3.csv("finished_1.csv").then((data) => {
+      //find max X by returning "rating"
+    const MAX_X_BAR = d3.max(data, (d) => {return (d.rating)});
+      //find max Y by returning "duration" as an int
+    const MAX_Y_BAR = d3.max(data, (d) => {return parseInt(d.duration)});
+
+    //domain and range
+
+    //use scaleBand() because ratings is nominal  
+    const X_SCALE_BAR = d3.scaleBand()
+    //domain are "rating" variables
+    .domain(data.map(function(d) {return d.rating}))
+    .range([0, VIS_WIDTH]).padding(0.25);
+
+    //use scaleLinear() because duration is quantitative and bar length should be proportional to value
+    const Y_SCALE_BAR = d3.scaleLinear()
+    .domain([0, MAX_Y_BAR + 10])
+    //take height as first parameter as coordinates start from top left
+    .range([VIS_HEIGHT,0]);
+
+    //bars with styling
+    FRAME2.selectAll("bars")
+    
+    //this is passed from .then()
+    .data(data)
+    .enter()
+    .append("rect") //appending attributes below to rect
+            .attr("class", "rect") //add class
+            .attr("x", (d) => { return X_SCALE_BAR(d.rating) + MARGINS.left }) // use d.category for x
+            .attr("y", (d) =>{ return Y_SCALE_BAR(d.duration) + MARGINS.top }) // use d.amount for y
+            .attr("width", X_SCALE_BAR.bandwidth())//width
+            .attr("height", (d) => { return VIS_HEIGHT - Y_SCALE_BAR(d.duration) });//height
+
+          // Add an x axis to the vis.
+            FRAME2.append("g") 
+            .attr("transform", "translate(" + MARGINS.left + "," + (VIS_HEIGHT + MARGINS.top) + ")") 
+            .call(d3.axisBottom(X_SCALE_BAR).ticks(14)) 
+            .attr("font-size", '10px'); 
+
+          //Create X axis label
+          FRAME2.append("text")
+          .attr("x", VIS_WIDTH / 2 )
+          .attr("y",  Y_SCALE_BAR(0) + 90 )
+          .style("text-anchor", "middle")
+          .text("Duration (Minutes)"); 
+
+          //Create Y axis label
+          FRAME2.append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 20 )
+          .attr("x", -300)
+          .text("Rating"); 
+
+          // add a y axis to the vis
+            FRAME2.append("g") 
+            .attr("transform", "translate(" + MARGINS.top + "," + MARGINS.left + ")") 
+            .call(d3.axisLeft(Y_SCALE_BAR).ticks(10)) 
+            .attr("font-size", '10px');
+
+          //tooltip
+            const TOOLTIP = d3.select("#vis2")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0); 
+
+          //define event handler functions for tooltips
+            function handleMouseover(event, d) {
+          //on mouseover, make opaque 
+              TOOLTIP.style("opacity", 1);
+
+            }
+
+          //moving the mouse
+            function handleMousemove(event, d) {
+          //position the tooltip and fill in information 
+              TOOLTIP.html("Category: " + d.rating + "<br>Amount: " + d.duration)
+              .style("left", (event.pageX + 10) + "px") //add offset from mouse
+              .style("top", (event.pageY - 50) + "px")
+            }
+
+          //on mouseleave, make transparent again 
+            function handleMouseleave(event, d) { 
+              TOOLTIP.style("opacity", 0)
+
+            } 
+
+          //add event listeners
+            FRAME2.selectAll(".rect")
+            .on("mouseover", handleMouseover) 
+            .on("mousemove", handleMousemove)
+            .on("mouseleave", handleMouseleave);    
 
 
-const FRAME2 = d3.select("#vis2")
-                  .append("svg")
-                    .attr("height", FRAME_HEIGHT)
-                    .attr("width", FRAME_WIDTH)
-                    .attr('id', 'spsvg')
-                    .attr("class", "frame");
-  function plot_bar(){
-    d3.csv("finished_1.csv").then((data) => { 
-
-        const Y_MAX = d3.max(data, (d) => { return parseInt(d.duration); });
-        
-        const X_SCALE = d3.scaleBand()
-            .range([0, VIS_WIDTH])
-            .domain(data.map(function(d) {return d.genre;}));
-            
-        const Y_SCALE = d3.scaleLinear() 
-            .domain([0, 100])
-            .range([VIS_HEIGHT, MARGINS.top]);
-
-        FRAME2.selectAll('bars')
-            .data(data)
-            .enter()
-            .append('rect')
-            .attr("x", (d) => { return X_SCALE(d.genre) + MARGINS.left; })
-            .attr("y", (d) => { return Y_SCALE(d.duration) + MARGINS.bottom; })
-              .attr('width', X_SCALE.bandwidth() - 10)
-              .attr('height', (d) => VIS_HEIGHT - Y_SCALE(d.duration))
-              .attr('fill', 'deepskyblue')
-              .attr('class', 'bar');
-
-plot_bar()
+          });
+}
+build_interactive_barchart();
