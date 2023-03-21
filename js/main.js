@@ -31,6 +31,37 @@ function display_rows(){
 function build_scatter_plot(addpoints, newdata) {
 
     d3.csv("line.csv").then((data) => {
+
+    // creates a tooltip
+    let Tooltip = d3.select("#vis1")
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "2px")
+        .style("border-radius", "5px")
+        .style("padding", "5px");
+
+    // mouseover activates the tooltip to be seen
+    let mouseover = function(d) {
+      Tooltip
+          .style("opacity", 1);
+    }
+
+    // mousemove keeps the tooltip next to the mouse
+    let mousemove = function(event, d) {
+      Tooltip
+          .html("Rating: " + d[0])
+          .style("left", (d3.pointer(event)[0]) + "px")
+          .style("top", (d3.pointer(event)[1]+860) + "px");
+    }
+
+    // mouseleave makes tooltip transparent when outside a bar.
+    let mouseleave = function(d) {
+      Tooltip
+          .style("opacity", 0);
+    }
     
     const grouped = d3.group(data, d => d.rating); 
     console.log(grouped)
@@ -68,8 +99,10 @@ function build_scatter_plot(addpoints, newdata) {
             return d3.line()
               .x(function(d) { return x_scale(d.release_year); })
               .y(function(d) { return y_scale(+d.Count); })
-              (d[1])
-          })
+              (d[1])})
+          .on("mouseover", mouseover)
+          .on("mousemove", mousemove)
+          .on("mouseleave", mouseleave);
 
   
     });
