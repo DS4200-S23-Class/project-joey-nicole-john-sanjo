@@ -51,6 +51,7 @@ function build_scatter_plot(addpoints, newdata) {
 
     // mousemove keeps the tooltip next to the mouse
     let mousemove = function(event, d) {
+      console.log(d)
       Tooltip
           .html("Rating: " + d[0])
           .style("left", (d3.pointer(event)[0]) + "px")
@@ -64,7 +65,7 @@ function build_scatter_plot(addpoints, newdata) {
     }
     
     const grouped = d3.group(data, d => d.rating); 
-    console.log(grouped)
+
 
   
     // Add X axis --> it is a date format
@@ -103,6 +104,30 @@ function build_scatter_plot(addpoints, newdata) {
           .on("mouseover", mouseover)
           .on("mousemove", mousemove)
           .on("mouseleave", mouseleave);
+    
+    
+    //Create Title 
+    FRAME1.append("text")
+    .attr("x", VIS_WIDTH/2)
+    .attr("y", 20)
+    .style("text-anchor", "middle")
+    .text("Movies Released Per Year By Rating");
+
+    //Create X axis label   
+    FRAME1.append("text")
+    .attr("x", VIS_WIDTH / 2 )
+    .attr("y",  y_scale(0) + 40 )
+    .style("text-anchor", "middle")
+    .text("Year of Release");
+
+    //Create Y axis label
+    FRAME1.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 20 )
+    .attr("x", -200)
+    
+    .style("text-anchor", "middle")
+    .text("Number of Releases"); 
 
   
     });
