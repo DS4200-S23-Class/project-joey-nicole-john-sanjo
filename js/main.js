@@ -17,7 +17,7 @@ function display_rows(){
   
     // reset graph if new points are being added 
   document.getElementById("spsvg").innerHTML = '';
-  d3.csv("finished.csv").then((data) => {
+  d3.csv("finished_1.csv").then((data) => {
 
     print_len = 10
 
@@ -134,3 +134,36 @@ function build_scatter_plot(addpoints, newdata) {
   }
 
   build_scatter_plot()
+
+
+const FRAME2 = d3.select("#vis2")
+                  .append("svg")
+                    .attr("height", FRAME_HEIGHT)
+                    .attr("width", FRAME_WIDTH)
+                    .attr('id', 'spsvg')
+                    .attr("class", "frame");
+  function plot_bar(){
+    d3.csv("finished_1.csv").then((data) => { 
+
+        const Y_MAX = d3.max(data, (d) => { return parseInt(d.duration); });
+        
+        const X_SCALE = d3.scaleBand()
+            .range([0, VIS_WIDTH])
+            .domain(data.map(function(d) {return d.genre;}));
+            
+        const Y_SCALE = d3.scaleLinear() 
+            .domain([0, 100])
+            .range([VIS_HEIGHT, MARGINS.top]);
+
+        FRAME2.selectAll('bars')
+            .data(data)
+            .enter()
+            .append('rect')
+            .attr("x", (d) => { return X_SCALE(d.genre) + MARGINS.left; })
+            .attr("y", (d) => { return Y_SCALE(d.duration) + MARGINS.bottom; })
+              .attr('width', X_SCALE.bandwidth() - 10)
+              .attr('height', (d) => VIS_HEIGHT - Y_SCALE(d.duration))
+              .attr('fill', 'deepskyblue')
+              .attr('class', 'bar');
+
+plot_bar()
