@@ -39,18 +39,18 @@ function build_scatter_plot(addpoints, newdata) {
     // Add X axis --> it is a date format
     const x_scale = d3.scaleLinear()
     .domain(d3.extent(data, function(d) { return d.release_year; }))
-    .range([ 0, VIS_WIDTH]);
+    .range([MARGINS.left, VIS_WIDTH]);
      FRAME1.append("g")
-     .attr("transform", "translate(" + MARGINS.left + 
-                  "," + (VIS_HEIGHT + MARGINS.top) + ")") 
+     .attr("transform", "translate(" + 0 + 
+                  "," + (VIS_HEIGHT + MARGINS.bottom) + ")") 
     .call(d3.axisBottom(x_scale).ticks(5));
 
      // Add Y axis
      const y_scale = d3.scaleLinear()
-    .domain([0, 200]) // fix this
-    .range([VIS_HEIGHT, 0]);
+    .domain([0, 150]) // fix this
+    .range([VIS_HEIGHT+MARGINS.top, 0]);
      FRAME1.append("g").attr("transform", "translate(" + MARGINS.left + 
-     "," + (MARGINS.bottom) + ")") 
+     "," + (0) + ")") 
     .call(d3.axisLeft(y_scale));
       
     // color palette
