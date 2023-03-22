@@ -17,7 +17,7 @@ function display_rows(){
   
     // reset graph if new points are being added 
   document.getElementById("spsvg").innerHTML = '';
-  d3.csv("finished_1.csv").then((data) => {
+  d3.csv("finished.csv").then((data) => {
 
     print_len = 10
 
@@ -27,6 +27,7 @@ function display_rows(){
     }
   });
 }
+display_rows();
 
 function build_line_plot(addpoints, newdata) {
 
@@ -143,7 +144,7 @@ const FRAME2 = d3.select("#vis2")
 
 function build_interactive_barchart() {
   //build bar plot inside of .then
-  d3.csv("finished_1.csv").then((data) => {
+  d3.csv("finished.csv").then((data) => {
       //find max X by returning "rating"
     const MAX_X_BAR = d3.max(data, (d) => {return (d.rating)});
       //find max Y by returning "duration" as an int
@@ -187,14 +188,14 @@ function build_interactive_barchart() {
           .attr("x", VIS_WIDTH / 2 )
           .attr("y",  Y_SCALE_BAR(0) + 90 )
           .style("text-anchor", "middle")
-          .text("Duration (Minutes)"); 
+          .text("Rating"); 
 
           //Create Y axis label
           FRAME2.append("text")
           .attr("transform", "rotate(-90)")
           .attr("y", 20 )
           .attr("x", -300)
-          .text("Rating"); 
+          .text("Duration (Minutes)"); 
 
           // add a y axis to the vis
             FRAME2.append("g") 
