@@ -40,8 +40,9 @@ def main():
         netflix_df[category] = encoding
 
     netflix_df.drop(columns=['country', 'type', 'description'], inplace=True)
+    netflix_df = netflix_df.astype({'complexity':'float'})
 
-    netflix_df.to_csv('finished_final.csv')
+    netflix_df.to_csv('testing_3.csv')
 
 
 

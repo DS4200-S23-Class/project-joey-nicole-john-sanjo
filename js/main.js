@@ -227,6 +227,8 @@ function build_interactive_barchart() {
               .style("top", (event.pageY - 50) + "px")
             }
 
+
+
           //on mouseleave, make transparent again 
             function handleMouseleave(event, d) { 
               TOOLTIP.style("opacity", 0)
@@ -274,5 +276,13 @@ const FRAME7= d3.select("#NR")
 .attr("width", TICK_WIDTH)
 .attr("class", "frame");
 
+d3.csv("finished.csv").then(function(data) {
 
+  const grouped_ratings = d3.group(data, d => d.rating);
 
+  function get_mean (grouped_ratings){
+    parseFloat(grouped_ratings.complexity)
+    return d3.mean(grouped_ratings.complexity)
+  }
+get_mean();
+})
