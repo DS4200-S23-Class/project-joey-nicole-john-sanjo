@@ -5,6 +5,9 @@ const MARGINS = {left: 50, right: 50, top: 50, bottom: 50};
 const VIS_HEIGHT = FRAME_HEIGHT - MARGINS.top - MARGINS.bottom;
 const VIS_WIDTH = FRAME_WIDTH - MARGINS.left - MARGINS.right; 
 
+const TICK_HEIGHT = 200;
+const TICK_WIDTH = 400;
+
 const FRAME1 = d3.select("#vis1")
                   .append("svg")
                     .attr("height", FRAME_HEIGHT)
@@ -240,3 +243,36 @@ function build_interactive_barchart() {
           });
 }
 build_interactive_barchart();
+
+const FRAME3 = d3.select("#G") 
+.append("svg") 
+.attr("height", TICK_HEIGHT)   
+.attr("width", TICK_WIDTH)
+.attr("class", "frame"); 
+
+const FRAME4= d3.select("#PG") 
+.append("svg") 
+.attr("height", TICK_HEIGHT)   
+.attr("width", TICK_WIDTH)
+.attr("class", "frame"); 
+
+const FRAME5= d3.select("#PG-13") 
+.append("svg") 
+.attr("height", TICK_HEIGHT)   
+.attr("width", TICK_WIDTH)
+.attr("class", "frame");
+
+const FRAME6= d3.select("#R") 
+.append("svg") 
+.attr("height", TICK_HEIGHT)   
+.attr("width", TICK_WIDTH)
+.attr("class", "frame");
+
+const FRAME7= d3.select("#NR") 
+.append("svg") 
+.attr("height", TICK_HEIGHT)   
+.attr("width", TICK_WIDTH)
+.attr("class", "frame");
+
+
+

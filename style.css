@@ -20,3 +20,12 @@ h4 {
     padding: 5px;
 }
 
+.containers {
+            width: 300px;
+            height: 150px;
+            border: 1px solid black;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+
