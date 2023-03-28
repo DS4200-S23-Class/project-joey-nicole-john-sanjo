@@ -276,13 +276,30 @@ const FRAME7= d3.select("#NR")
 .attr("width", TICK_WIDTH)
 .attr("class", "frame");
 
+console.log("test")
 d3.csv("finished.csv").then(function(data) {
 
-  const grouped_ratings = d3.group(data, d => d.rating);
+  // filter the data based on the ratings 
+  const filtered_data = data.filter(d => ["G", "PG", "PG-13", "R", "NR"].includes(d.rating));
 
-  function get_mean (grouped_ratings){
-    parseFloat(grouped_ratings.complexity)
-    return d3.mean(grouped_ratings.complexity)
-  }
-get_mean();
-})
+  // group the data by rating
+  const grouped_ratings = d3.group(filtered_data, d => d.rating);
+
+  // iterate over each group and calculate the mean complexity score
+  const mean_complexity_scores = {};
+  grouped_ratings.forEach((value, key) => {
+    const mean_complexity_score = d3.mean(value.map(d => parseInt(d.complexity)));
+    mean_complexity_scores[key] = (mean_complexity_score).toFixed(2);
+  });
+
+  console.log(mean_complexity_scores); 
+//replace 'mean_complexity_scores' with  dictionary of mean complexity scores
+document.getElementById("G-score").innerHTML += " " + mean_complexity_scores['G'];
+document.getElementById("PG-score").innerHTML += " " + mean_complexity_scores['PG'];
+document.getElementById("PG-13-score").innerHTML += " " + mean_complexity_scores['PG-13'];
+document.getElementById("R-score").innerHTML += " " + mean_complexity_scores['R'];
+document.getElementById("NR-score").innerHTML += " " + mean_complexity_scores['NR'];
+
+});
+
+
