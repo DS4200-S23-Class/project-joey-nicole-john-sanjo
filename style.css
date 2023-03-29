@@ -29,6 +29,11 @@ h4 {
             position: relative;
             text-align: center;
             background-color: gold;
+}
 
+
+#vis2_3{
+    display: flex;
+    justify-content: space-around;
 
 }

@@ -8,6 +8,7 @@ const VIS_WIDTH = FRAME_WIDTH - MARGINS.left - MARGINS.right;
 const TICK_HEIGHT = 200;
 const TICK_WIDTH = 400;
 
+
 const FRAME1 = d3.select("#vis1")
                   .append("svg")
                     .attr("height", FRAME_HEIGHT)
