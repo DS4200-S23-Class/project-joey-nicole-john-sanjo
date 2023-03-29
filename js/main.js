@@ -1,9 +1,14 @@
 const FRAME_HEIGHT = 500;
 const FRAME_WIDTH = 500; 
+
+const LINEFRAME_WIDTH = 1000;
+
 const MARGINS = {left: 50, right: 50, top: 50, bottom: 50};
 
 const VIS_HEIGHT = FRAME_HEIGHT - MARGINS.top - MARGINS.bottom;
 const VIS_WIDTH = FRAME_WIDTH - MARGINS.left - MARGINS.right; 
+
+const LINEVIS_WIDTH = LINEFRAME_WIDTH - MARGINS.left - MARGINS.right; 
 
 const TICK_HEIGHT = 200;
 const TICK_WIDTH = 400;
@@ -12,7 +17,7 @@ const TICK_WIDTH = 400;
 const FRAME1 = d3.select("#vis1")
                   .append("svg")
                     .attr("height", FRAME_HEIGHT)
-                    .attr("width", FRAME_WIDTH)
+                    .attr("width", LINEFRAME_WIDTH)
                     .attr('id', 'spsvg')
                     .attr("class", "frame");
 
@@ -21,7 +26,7 @@ function display_rows(){
   
     // reset graph if new points are being added 
   document.getElementById("spsvg").innerHTML = '';
-  d3.csv("finished.csv").then((data) => {
+  d3.csv("complete.csv").then((data) => {
 
     print_len = 10
 
@@ -76,11 +81,11 @@ function build_line_plot(addpoints, newdata) {
     // Add X axis --> it is a date format
     const x_scale = d3.scaleLinear()
     .domain(d3.extent(data, function(d) { return d.release_year; }))
-    .range([MARGINS.left, VIS_WIDTH]);
+    .range([MARGINS.left, LINEVIS_WIDTH]);
      FRAME1.append("g")
      .attr("transform", "translate(" + 0 + 
                   "," + (VIS_HEIGHT + MARGINS.bottom) + ")") 
-    .call(d3.axisBottom(x_scale).ticks(5));
+    .call(d3.axisBottom(x_scale).ticks(10));
 
      // Add Y axis
      const y_scale = d3.scaleLinear()
@@ -113,13 +118,13 @@ function build_line_plot(addpoints, newdata) {
     
     //Create Title 
     FRAME1.append("text")
-    .attr("x", VIS_WIDTH/2)
+    .attr("x", LINEVIS_WIDTH/2)
     .attr("y", 20)
-    .style("text-anchor", "middle")
+    .style("text-anchor", "middle");
 
     //Create X axis label   
     FRAME1.append("text")
-    .attr("x", VIS_WIDTH / 2 )
+    .attr("x", LINEVIS_WIDTH / 2 )
     .attr("y",  y_scale(0) + 40 )
     .style("text-anchor", "middle")
     .text("Year of Release");
@@ -148,7 +153,7 @@ const FRAME2 = d3.select("#vis2")
 
 function build_interactive_barchart() {
   //build bar plot inside of .then
-  d3.csv("finished.csv").then((data) => {
+  d3.csv("complete.csv").then((data) => {
       //find max X by returning "rating"
     const MAX_X_BAR = d3.max(data, (d) => {return (d.rating)});
       //find max Y by returning "duration" as an int
@@ -169,7 +174,7 @@ function build_interactive_barchart() {
     .range([VIS_HEIGHT,0]);
 
     //bars with styling
-    FRAME2.selectAll("bars")
+    let bar_chart = FRAME2.selectAll("bars")
     
     //this is passed from .then()
     .data(data)
@@ -180,6 +185,7 @@ function build_interactive_barchart() {
             .attr("y", (d) =>{ return Y_SCALE_BAR(d.duration) + MARGINS.top }) // use d.amount for y
             .attr("width", X_SCALE_BAR.bandwidth())//width
             .attr("height", (d) => { return VIS_HEIGHT - Y_SCALE_BAR(d.duration) });//height
+
 
           // Add an x axis to the vis.
             FRAME2.append("g") 
@@ -240,7 +246,8 @@ function build_interactive_barchart() {
             FRAME2.selectAll(".rect")
             .on("mouseover", handleMouseover) 
             .on("mousemove", handleMousemove)
-            .on("mouseleave", handleMouseleave);    
+            .on("mouseleave", handleMouseleave);   
+
 
 
           });
@@ -278,7 +285,7 @@ const FRAME7= d3.select("#NR")
 .attr("class", "frame");
 
 console.log("test")
-d3.csv("finished.csv").then(function(data) {
+d3.csv("complete.csv").then(function(data) {
 
   // filter the data based on the ratings 
   const filtered_data = data.filter(d => ["G", "PG", "PG-13", "R", "NR"].includes(d.rating));
@@ -303,4 +310,105 @@ document.getElementById("NR-score").innerHTML += " " + mean_complexity_scores['N
 
 });
 
+function build_scatter() {
+
+const FRAME_8 = d3.select("#vis4") 
+                  .append("svg") 
+                    .attr("height", FRAME_HEIGHT)   
+                    .attr("width", FRAME_WIDTH)
+                    .attr("class", "frame");
+
+
+d3.csv("complete.csv").then((data) => {
+
+  const MAX_X_LENGTH = d3.max(data, (d) => { return parseInt(d.duration); });
+  const MAX_Y_LENGTH = d3.max(data, (d) => { return parseInt(d.complexity); });
+
+// creates scale for data 
+  const X_SCALE_LENGTH = d3.scaleLinear() 
+                           .domain([0, (MAX_X_LENGTH + 1)]) 
+                           .range([0, VIS_WIDTH]); 
+
+
+  const Y_SCALE_LENGTH = d3.scaleLinear() 
+                           .domain([0, (MAX_Y_LENGTH + 1)])  
+                           .range([VIS_HEIGHT, 0]); 
+
+  const color = d3.scaleOrdinal()
+    .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+
+    
+  FRAME_8.selectAll("points") 
+      .data(data)
+      .enter()
+      .append("circle")
+        .attr("class", "scatter")
+        .attr("cx", (d) => { return (X_SCALE_LENGTH(d.duration) + MARGINS.left) })
+        .attr("cy", (d) => { return (Y_SCALE_LENGTH(d.complexity) + MARGINS.bottom) })
+        .attr("r", 4)
+        .attr("stroke", function(d){ return color(d[0]); })
+
+            //Create Title 
+    FRAME_8.append("text")
+    .attr("x", LINEVIS_WIDTH/2)
+    .attr("y", 20)
+    .style("text-anchor", "middle")
+    .text("TITLE");
+
+         // Add an x axis to the vis.
+          FRAME_8.append("g") 
+            .attr("transform", "translate(" + MARGINS.left + "," + (VIS_HEIGHT + MARGINS.top) + ")") 
+            .call(d3.axisBottom(X_SCALE_LENGTH).ticks(14)) 
+            .attr("font-size", '10px'); 
+
+          //Create X axis label
+          FRAME_8.append("text")
+          .attr("x", VIS_WIDTH / 2 )
+          .attr("y",  Y_SCALE_LENGTH(0) + 90 )
+          .style("text-anchor", "middle")
+          .text("Duration (Minutes)"); 
+
+          //Create Y axis label
+          FRAME_8.append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 20 )
+          .attr("x", -300)
+          .text("Complexity"); 
+
+          // add a y axis to the vis
+            FRAME_8.append("g") 
+            .attr("transform", "translate(" + MARGINS.top + "," + MARGINS.left + ")") 
+            .call(d3.axisLeft(Y_SCALE_LENGTH).ticks(10)) 
+            .attr("font-size", '10px');
+
+      // calls brush to vis2
+  FRAME_8.call(d3.brush()                 
+        .extent([[0,0], [FRAME_WIDTH, FRAME_HEIGHT]])
+        .on("start brush", brush_selection)
+      );
+      });
+
+}
+
+build_scatter();
+
+
+
+  function brush_selection(event) {
+    let coords = event.selection;
+    
+    // checks that the brushed functions are highlighted
+    FRAME_8.classed("selected", function(d){return highlight(coords, (X_SCALE_WIDTH(d.duration)+MARGINS.left), (Y_SCALE_WIDTH(d.rating)+MARGINS.bottom)) });
+    FRAME2.classed("selected", function(d){return highlight(coords, (X_SCALE_WIDTH(d.complexity)+MARGINS.left), (Y_SCALE_WIDTH(d.duration)+MARGINS.bottom)) });
+  
+  };
+
+  // check whether a point is in the selection or not
+  function highlight(coords, cx, cy) {
+    let x0 = coords[0][0],
+        x1 = coords[1][0],
+        y0 = coords[0][1],
+        y1 = coords[1][1];
+    return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
+  };
 
