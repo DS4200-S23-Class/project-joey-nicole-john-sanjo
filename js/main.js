@@ -387,7 +387,34 @@ d3.csv("complete.csv").then((data) => {
         .on("start brush", brush_selection)
       );
       });
+         //tooltip
+            const TOOLTIP = d3.select("#vis4")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0); 
 
+          //define event handler functions for tooltips
+            function handleMouseover(event, d) {
+          //on mouseover, make opaque 
+              TOOLTIP.style("opacity", 1);
+
+            }
+
+          //moving the mouse
+            function handleMousemove(event, d) {
+          //position the tooltip and fill in information 
+              TOOLTIP.html("Duration: " + d.duration + "<br>Complexity: " + d.complexity)
+              .style("left", (event.pageX + 10) + "px") //add offset from mouse
+              .style("top", (event.pageY - 50) + "px");
+            }
+
+
+
+          //on mouseleave, make transparent again 
+            function handleMouseleave(event, d) { 
+              TOOLTIP.style("opacity", 0)
+
+            } 
 }
 
 build_scatter();
