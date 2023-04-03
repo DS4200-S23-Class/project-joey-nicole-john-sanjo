@@ -120,7 +120,8 @@ function build_line_plot(addpoints, newdata) {
     FRAME1.append("text")
     .attr("x", LINEVIS_WIDTH/2)
     .attr("y", 20)
-    .style("text-anchor", "middle");
+    .style("text-anchor", "middle")
+    .text("Movies Released Per Year By Rating");
 
     //Create X axis label   
     FRAME1.append("text")
@@ -137,6 +138,13 @@ function build_line_plot(addpoints, newdata) {
     
     .style("text-anchor", "middle")
     .text("Number of Releases"); 
+
+    // Handling Legend (incomplete)
+    FRAME1.append("circle").attr("cx",100).attr("cy",130).attr("r", 6).style("fill", "#e41a1c")
+    FRAME1.append("circle").attr("cx",100).attr("cy",160).attr("r", 6).style("fill", "#404080")
+    FRAME1.append("text").attr("x", 120).attr("y", 130).text("variable A").style("font-size", "15px").attr("alignment-baseline","middle")
+    FRAME1.append("text").attr("x", 120).attr("y", 160).text("variable B").style("font-size", "15px").attr("alignment-baseline","middle")        
+
 
 
   });
@@ -173,9 +181,10 @@ function build_interactive_barchart() {
     //take height as first parameter as coordinates start from top left
     .range([VIS_HEIGHT,0]);
 
-    //bars with styling
+    // Bar styling using d3 textures library
+    const texture = textures.lines().size(4).orientation("vertical").stroke('red');
+    FRAME2.call(texture);
     let bar_chart = FRAME2.selectAll("bars")
-    
     //this is passed from .then()
     .data(data)
     .enter()
@@ -184,8 +193,8 @@ function build_interactive_barchart() {
             .attr("x", (d) => { return X_SCALE_BAR(d.rating) + MARGINS.left }) // use d.category for x
             .attr("y", (d) =>{ return Y_SCALE_BAR(d.duration) + MARGINS.top }) // use d.amount for y
             .attr("width", X_SCALE_BAR.bandwidth())//width
-            .attr("height", (d) => { return VIS_HEIGHT - Y_SCALE_BAR(d.duration) });//height
-
+            .attr("height", (d) => { return VIS_HEIGHT - Y_SCALE_BAR(d.duration) })//height
+            .attr('fill', texture.url());
 
           // Add an x axis to the vis.
             FRAME2.append("g") 
