@@ -15,15 +15,15 @@ const TICK_WIDTH = 400;
 
 
 const FRAME1 = d3.select("#vis1")
-                  .append("svg")
-                    .attr("height", FRAME_HEIGHT)
-                    .attr("width", LINEFRAME_WIDTH)
-                    .attr('id', 'spsvg')
-                    .attr("class", "frame");
+.append("svg")
+.attr("height", FRAME_HEIGHT)
+.attr("width", LINEFRAME_WIDTH)
+.attr('id', 'spsvg')
+.attr("class", "frame");
 
 
 function display_rows(){
-  
+
     // reset graph if new points are being added 
   document.getElementById("spsvg").innerHTML = '';
   d3.csv("complete.csv").then((data) => {
@@ -40,80 +40,80 @@ display_rows();
 
 function build_line_plot(addpoints, newdata) {
 
-    d3.csv("line.csv").then((data) => {
+  d3.csv("line.csv").then((data) => {
 
     // creates a tooltip
     let Tooltip = d3.select("#vis1")
-        .append("div")
-        .style("opacity", 0)
-        .attr("class", "tooltip")
-        .style("background-color", "white")
-        .style("border", "solid")
-        .style("border-width", "2px")
-        .style("border-radius", "5px")
-        .style("padding", "5px");
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px");
 
     // mouseover activates the tooltip to be seen
     let mouseover = function(d) {
       Tooltip
-          .style("opacity", 1);
+      .style("opacity", 1);
     }
 
     // mousemove keeps the tooltip next to the mouse
     let mousemove = function(event, d) {
       console.log(d)
       Tooltip
-          .html("Rating: " + d[0])
-          .style("left", (d3.pointer(event)[0]) + "px")
-          .style("top", (d3.pointer(event)[1]+860) + "px");
+      .html("Rating: " + d[0])
+      .style("left", (d3.pointer(event)[0]) + "px")
+      .style("top", (d3.pointer(event)[1]+860) + "px");
     }
 
     // mouseleave makes tooltip transparent when outside a bar.
     let mouseleave = function(d) {
       Tooltip
-          .style("opacity", 0);
+      .style("opacity", 0);
     }
     
     const grouped = d3.group(data, d => d.rating); 
 
 
-  
+
     // Add X axis --> it is a date format
     const x_scale = d3.scaleLinear()
     .domain(d3.extent(data, function(d) { return d.release_year; }))
     .range([MARGINS.left, LINEVIS_WIDTH]);
-     FRAME1.append("g")
-     .attr("transform", "translate(" + 0 + 
-                  "," + (VIS_HEIGHT + MARGINS.bottom) + ")") 
+    FRAME1.append("g")
+    .attr("transform", "translate(" + 0 + 
+      "," + (VIS_HEIGHT + MARGINS.bottom) + ")") 
     .call(d3.axisBottom(x_scale).ticks(10));
 
      // Add Y axis
-     const y_scale = d3.scaleLinear()
+    const y_scale = d3.scaleLinear()
     .domain([0, 150]) // fix this
     .range([VIS_HEIGHT+MARGINS.top, 0]);
-     FRAME1.append("g").attr("transform", "translate(" + MARGINS.left + 
+    FRAME1.append("g").attr("transform", "translate(" + MARGINS.left + 
      "," + (0) + ")") 
     .call(d3.axisLeft(y_scale));
-      
+
     // color palette
     const color = d3.scaleOrdinal()
     .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
 
     // Draw the line
     FRAME1.selectAll(".line")
-        .data(grouped)
-        .join("path")
-          .attr("fill", "none")
-          .attr("stroke", function(d){ return color(d[0]) })
-          .attr("stroke-width", 1.5)
-          .attr("d", function(d){
-            return d3.line()
-              .x(function(d) { return x_scale(d.release_year); })
-              .y(function(d) { return y_scale(+d.Count); })
-              (d[1])})
-          .on("mouseover", mouseover)
-          .on("mousemove", mousemove)
-          .on("mouseleave", mouseleave);
+    .data(grouped)
+    .join("path")
+    .attr("fill", "none")
+    .attr("stroke", function(d){ return color(d[0]) })
+    .attr("stroke-width", 1.5)
+    .attr("d", function(d){
+      return d3.line()
+      .x(function(d) { return x_scale(d.release_year); })
+      .y(function(d) { return y_scale(+d.Count); })
+      (d[1])})
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseleave", mouseleave);
     
     
     //Create Title 
@@ -138,11 +138,11 @@ function build_line_plot(addpoints, newdata) {
     .style("text-anchor", "middle")
     .text("Number of Releases"); 
 
-  
-    });
-  }
 
-  build_line_plot();
+  });
+}
+
+build_line_plot();
 
   //build frame for bar chart
 const FRAME2 = d3.select("#vis2") 
@@ -194,18 +194,18 @@ function build_interactive_barchart() {
             .attr("font-size", '10px'); 
 
           //Create X axis label
-          FRAME2.append("text")
-          .attr("x", VIS_WIDTH / 2 )
-          .attr("y",  Y_SCALE_BAR(0) + 90 )
-          .style("text-anchor", "middle")
-          .text("Rating"); 
+            FRAME2.append("text")
+            .attr("x", VIS_WIDTH / 2 )
+            .attr("y",  Y_SCALE_BAR(0) + 90 )
+            .style("text-anchor", "middle")
+            .text("Rating"); 
 
           //Create Y axis label
-          FRAME2.append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 20 )
-          .attr("x", -300)
-          .text("Duration (Minutes)"); 
+            FRAME2.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 20 )
+            .attr("x", -300)
+            .text("Duration (Minutes)"); 
 
           // add a y axis to the vis
             FRAME2.append("g") 
@@ -302,51 +302,52 @@ d3.csv("complete.csv").then(function(data) {
 
   console.log(mean_complexity_scores); 
 //replace 'mean_complexity_scores' with  dictionary of mean complexity scores
-document.getElementById("G-score").innerHTML += " " + mean_complexity_scores['G'];
-document.getElementById("PG-score").innerHTML += " " + mean_complexity_scores['PG'];
-document.getElementById("PG-13-score").innerHTML += " " + mean_complexity_scores['PG-13'];
-document.getElementById("R-score").innerHTML += " " + mean_complexity_scores['R'];
-document.getElementById("NR-score").innerHTML += " " + mean_complexity_scores['NR'];
+  document.getElementById("G-score").innerHTML += " " + mean_complexity_scores['G'];
+  document.getElementById("PG-score").innerHTML += " " + mean_complexity_scores['PG'];
+  document.getElementById("PG-13-score").innerHTML += " " + mean_complexity_scores['PG-13'];
+  document.getElementById("R-score").innerHTML += " " + mean_complexity_scores['R'];
+  document.getElementById("NR-score").innerHTML += " " + mean_complexity_scores['NR'];
 
 });
 
+const FRAME_8 = d3.select("#vis4") 
+  .append("svg") 
+  .attr("height", FRAME_HEIGHT)   
+  .attr("width", FRAME_WIDTH)
+  .attr("class", "frame");
+
 function build_scatter() {
 
-const FRAME_8 = d3.select("#vis4") 
-                  .append("svg") 
-                    .attr("height", FRAME_HEIGHT)   
-                    .attr("width", FRAME_WIDTH)
-                    .attr("class", "frame");
 
+  d3.csv("complete.csv").then((data) => {
 
-d3.csv("complete.csv").then((data) => {
-
-  const MAX_X_LENGTH = d3.max(data, (d) => { return parseInt(d.duration); });
-  const MAX_Y_LENGTH = d3.max(data, (d) => { return parseInt(d.complexity); });
+    const MAX_X_LENGTH = d3.max(data, (d) => { return parseInt(d.duration); });
+    const MAX_Y_LENGTH = d3.max(data, (d) => { return parseInt(d.complexity); });
 
 // creates scale for data 
-  const X_SCALE_LENGTH = d3.scaleLinear() 
-                           .domain([0, (MAX_X_LENGTH + 1)]) 
-                           .range([0, VIS_WIDTH]); 
+    const X_SCALE_WIDTH = d3.scaleLinear() 
+    .domain([0, (MAX_X_LENGTH + 1)]) 
+    .range([0, VIS_WIDTH]); 
 
 
-  const Y_SCALE_LENGTH = d3.scaleLinear() 
-                           .domain([0, (MAX_Y_LENGTH + 1)])  
-                           .range([VIS_HEIGHT, 0]); 
+    const Y_SCALE_LENGTH = d3.scaleLinear() 
+    .domain([0, (MAX_Y_LENGTH + 1)])  
+    .range([VIS_HEIGHT, 0]); 
 
-  const color = d3.scaleOrdinal()
+    const color = d3.scaleOrdinal()
     .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
 
     
-  FRAME_8.selectAll("points") 
-      .data(data)
-      .enter()
-      .append("circle")
-        .attr("class", "scatter")
-        .attr("cx", (d) => { return (X_SCALE_LENGTH(d.duration) + MARGINS.left) })
-        .attr("cy", (d) => { return (Y_SCALE_LENGTH(d.complexity) + MARGINS.bottom) })
-        .attr("r", 4)
-        .attr("stroke", function(d){ return color(d[0]); })
+    FRAME_8.selectAll("points") 
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("class", "scatter")
+    .attr("cx", (d) => { return (X_SCALE_WIDTH(d.duration) + MARGINS.left) })
+    .attr("cy", (d) => { return (Y_SCALE_LENGTH(d.complexity) + MARGINS.bottom) })
+    .attr("r", 4)
+    .attr("stroke", function(d){ return color(d[0]); })
+    .attr("rating", (d) => { return (d.rating) })
 
             //Create Title 
     FRAME_8.append("text")
@@ -356,54 +357,54 @@ d3.csv("complete.csv").then((data) => {
     .text("TITLE");
 
          // Add an x axis to the vis.
-          FRAME_8.append("g") 
-            .attr("transform", "translate(" + MARGINS.left + "," + (VIS_HEIGHT + MARGINS.top) + ")") 
-            .call(d3.axisBottom(X_SCALE_LENGTH).ticks(14)) 
-            .attr("font-size", '10px'); 
+    FRAME_8.append("g") 
+    .attr("transform", "translate(" + MARGINS.left + "," + (VIS_HEIGHT + MARGINS.top) + ")") 
+    .call(d3.axisBottom(X_SCALE_WIDTH).ticks(14)) 
+    .attr("font-size", '10px'); 
 
           //Create X axis label
-          FRAME_8.append("text")
-          .attr("x", VIS_WIDTH / 2 )
-          .attr("y",  Y_SCALE_LENGTH(0) + 90 )
-          .style("text-anchor", "middle")
-          .text("Duration (Minutes)"); 
+    FRAME_8.append("text")
+      .attr("x", VIS_WIDTH / 2 )
+      .attr("y",  Y_SCALE_LENGTH(0) + 90 )
+      .style("text-anchor", "middle")
+      .text("Duration (Minutes)"); 
 
           //Create Y axis label
-          FRAME_8.append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 20 )
-          .attr("x", -300)
-          .text("Complexity"); 
+    FRAME_8.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 20 )
+      .attr("x", -300)
+      .text("Complexity"); 
 
           // add a y axis to the vis
-            FRAME_8.append("g") 
-            .attr("transform", "translate(" + MARGINS.top + "," + MARGINS.left + ")") 
-            .call(d3.axisLeft(Y_SCALE_LENGTH).ticks(10)) 
-            .attr("font-size", '10px');
+    FRAME_8.append("g") 
+    .attr("transform", "translate(" + MARGINS.top + "," + MARGINS.left + ")") 
+    .call(d3.axisLeft(Y_SCALE_LENGTH).ticks(10)) 
+    .attr("font-size", '10px');
 
       // calls brush to vis2
-  FRAME_8.call(d3.brush()                 
-        .extent([[0,0], [FRAME_WIDTH, FRAME_HEIGHT]])
-        .on("start brush", brush_selection)
+    FRAME_8.call(d3.brush()                 
+      .extent([[0,0], [FRAME_WIDTH, FRAME_HEIGHT]])
+      .on("start brush", brush_selection)
       );
-      });
+
+
          //tooltip
-            const TOOLTIP = d3.select("#vis4")
-            .append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0); 
+  const TOOLTIP = d3.select("#vis4")
+  .append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0); 
 
           //define event handler functions for tooltips
-            function handleMouseover(event, d) {
+  function handleMouseover(event, d) {
           //on mouseover, make opaque 
-              TOOLTIP.style("opacity", 1);
+    TOOLTIP.style("opacity", 1);
 
-            }
-
+  }
           //moving the mouse
-            function handleMousemove(event, d) {
+  function handleMousemove(event, d) {
           //position the tooltip and fill in information 
-              TOOLTIP.html("Duration: " + d.duration + "<br>Complexity: " + d.complexity)
+    TOOLTIP.html("Duration: " + d.duration + "<br>Complexity: " + d.complexity)
               .style("left", (event.pageX + 10) + "px") //add offset from mouse
               .style("top", (event.pageY - 50) + "px");
             }
@@ -415,27 +416,31 @@ d3.csv("complete.csv").then((data) => {
               TOOLTIP.style("opacity", 0)
 
             } 
-}
 
-build_scatter();
+            function brush_selection(event) {
+              let extent = event.selection;
 
 
-
-  function brush_selection(event) {
-    let coords = event.selection;
-    
     // checks that the brushed functions are highlighted
-    FRAME_8.classed("selected", function(d){return highlight(coords, (X_SCALE_WIDTH(d.duration)+MARGINS.left), (Y_SCALE_WIDTH(d.rating)+MARGINS.bottom)) });
-    FRAME2.classed("selected", function(d){return highlight(coords, (X_SCALE_WIDTH(d.complexity)+MARGINS.left), (Y_SCALE_WIDTH(d.duration)+MARGINS.bottom)) });
-  
-  };
+
+              FRAME_8.classed("selected", function(d){return highlight(extent, (X_SCALE_WIDTH(d.duration)+MARGINS.left), (Y_SCALE_WIDTH(d.complexity)+MARGINS.bottom)) });
+              //FRAME2.classed("selected", function(d){return highlight(coords, (X_SCALE_WIDTH(d.rating)+MARGINS.left), (Y_SCALE_WIDTH(d.duration)+MARGINS.bottom)) });
+
+            };
 
   // check whether a point is in the selection or not
-  function highlight(coords, cx, cy) {
-    let x0 = coords[0][0],
-        x1 = coords[1][0],
-        y0 = coords[0][1],
-        y1 = coords[1][1];
-    return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
-  };
+            function highlight(coords, cx, cy) {
+              let x0 = coords[0][0],
+              x1 = coords[1][0],
+              y0 = coords[0][1],
+              y1 = coords[1][1];
+             return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
+
+            };
+          }
+)};
+          build_scatter();
+
+
+
 
