@@ -26,7 +26,7 @@ function display_rows(){
 
     // reset graph if new points are being added 
   document.getElementById("spsvg").innerHTML = '';
-  d3.csv("complete.csv").then((data) => {
+  d3.csv("DONE.csv").then((data) => {
 
     print_len = 10
 
@@ -98,7 +98,7 @@ function build_line_plot(addpoints, newdata) {
     // color palette
     const color = d3.scaleOrdinal()
     .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
-
+console.log(grouped)
     // Draw the line
     FRAME1.selectAll(".line")
     .data(grouped)
@@ -138,8 +138,28 @@ function build_line_plot(addpoints, newdata) {
     .style("text-anchor", "middle")
     .text("Number of Releases"); 
 
+// legend 
+    FRAME1.append("circle").attr("cx",100).attr("cy",40).attr("r", 6).style("fill", "#e41a1c");
+ FRAME1.append("text").attr("x", 120).attr("y", 40).text("PG").style("font-size", "15px").attr("alignment-baseline","middle");
+  
+   FRAME1.append("circle").attr("cx",100).attr("cy",60).attr("r", 6).style("fill", "#377eb8");
+    FRAME1.append("text").attr("x", 120).attr("y", 60).text("PG-13").style("font-size", "15px").attr("alignment-baseline","middle")  ; 
+    
+    FRAME1.append("circle").attr("cx",100).attr("cy",80).attr("r", 6).style("fill", "#4daf4a");
+    FRAME1.append("text").attr("x", 120).attr("y", 80).text("R").style("font-size", "15px").attr("alignment-baseline","middle");
+
+    FRAME1.append("circle").attr("cx",100).attr("cy",100).attr("r", 6).style("fill", "#984ea3");
+    FRAME1.append("text").attr("x", 120).attr("y", 100).text("TV-14").style("font-size", "15px").attr("alignment-baseline","middle")  ; 
+
+    FRAME1.append("circle").attr("cx",100).attr("cy",120).attr("r", 6).style("fill", "#ff7f00");
+ FRAME1.append("text").attr("x", 120).attr("y", 120).text("TV-MA").style("font-size", "15px").attr("alignment-baseline","middle");
+  
+   FRAME1.append("circle").attr("cx",100).attr("cy",140).attr("r", 6).style("fill", "#ffff33");
+    FRAME1.append("text").attr("x", 120).attr("y", 140).text("TV-PG").style("font-size", "15px").attr("alignment-baseline","middle")  ; 
+    
 
   });
+
 }
 
 build_line_plot();
@@ -153,7 +173,7 @@ const FRAME2 = d3.select("#vis2")
 
 function build_interactive_barchart() {
   //build bar plot inside of .then
-  d3.csv("complete.csv").then((data) => {
+  d3.csv("DONE.csv").then((data) => {
       //find max X by returning "rating"
     const MAX_X_BAR = d3.max(data, (d) => {return (d.rating)});
       //find max Y by returning "duration" as an int
@@ -284,8 +304,7 @@ const FRAME7= d3.select("#NR")
 .attr("width", TICK_WIDTH)
 .attr("class", "frame");
 
-console.log("test")
-d3.csv("complete.csv").then(function(data) {
+d3.csv("DONE.csv").then(function(data) {
 
   // filter the data based on the ratings 
   const filtered_data = data.filter(d => ["G", "PG", "PG-13", "R", "NR"].includes(d.rating));
@@ -314,50 +333,85 @@ const FRAME_8 = d3.select("#vis4")
   .append("svg") 
   .attr("height", FRAME_HEIGHT)   
   .attr("width", FRAME_WIDTH)
+  .attr("id", "spsvg")
   .attr("class", "frame");
 
 function build_scatter() {
 
 
-  d3.csv("complete.csv").then((data) => {
+  d3.csv("DONE.csv").then((data) => {
 
     const MAX_X_LENGTH = d3.max(data, (d) => { return parseInt(d.duration); });
     const MAX_Y_LENGTH = d3.max(data, (d) => { return parseInt(d.complexity); });
 
 // creates scale for data 
     const X_SCALE_WIDTH = d3.scaleLinear() 
-    .domain([0, (MAX_X_LENGTH + 1)]) 
-    .range([0, VIS_WIDTH]); 
+      .domain([0, (MAX_X_LENGTH + 1)]) 
+      .range([0, VIS_WIDTH]); 
 
 
     const Y_SCALE_LENGTH = d3.scaleLinear() 
-    .domain([0, (MAX_Y_LENGTH + 1)])  
-    .range([VIS_HEIGHT, 0]); 
+      .domain([0, (MAX_Y_LENGTH + 1)])  
+      .range([VIS_HEIGHT, 0]); 
 
     const color = d3.scaleOrdinal()
     .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
 
+    // creates a tooltip
+    let Tooltip = d3.select("#vis4")
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("background-color", "white")
+      .style("border", "solid")
+      .style("border-width", "2px")
+      .style("border-radius", "5px")
+      .style("padding", "5px");
+
+    // mouseover activates the tooltip to be seen
+    let mouseover = function(d) {
+      Tooltip
+      .style("opacity", 1);
+    }
+
+    // mousemove keeps the tooltip next to the mouse
+    let mousemove = function(event, d) {
+      console.log(d)
+      Tooltip
+      .html("Duration: " + d.duration + "<br>Complexity: " + d.complexity)
+      .style("left", (d3.pointer(event)[0]) + "px")
+      .style("top", (d3.pointer(event)[1]+860) + "px");
+    }
+
+    // mouseleave makes tooltip transparent when outside a bar.
+    let mouseleave = function(d) {
+      Tooltip
+      .style("opacity", 0);
+    }
     
     FRAME_8.selectAll("points") 
       .data(data)
       .enter()
       .append("circle")
-      .attr("class", "scatter")
-      .attr("cx", (d) => { return (X_SCALE_WIDTH(d.duration) + MARGINS.left) })
-      .attr("cy", (d) => { return (Y_SCALE_LENGTH(d.complexity) + MARGINS.bottom) })
-      .attr("r", 4)
-      .attr("stroke", function(d){ return color(d[0]); })
-      .attr("rating", (d) => { return (d.rating) })
-      .on("mouseover", handleMouseover)
-      .on("mousemove", handleMousemove)
-      .on("mouseleave", handleMouseleave);
+        .attr("class", "point")
+        .attr("cx", (d) => { return (X_SCALE_WIDTH(d.duration) + MARGINS.left) })
+        .attr("cy", (d) => { return (Y_SCALE_LENGTH(d.complexity) + MARGINS.bottom) })
+        .attr("r", 4)
+        .attr("stroke", function(d){ return color(d[0]) })
+        .attr("rating", (d) => { return (d.rating) })
+;
+    FRAME_8.selectAll(".circle")
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave);
+      
 
             //Create Title 
     FRAME_8.append("text")
     .attr("x", LINEVIS_WIDTH/2)
     .attr("y", 20)
     .style("text-anchor", "middle")
-    .text("TITLE");
+    .text("Movie Complexity by Duration");
 
          // Add an x axis to the vis.
     FRAME_8.append("g") 
@@ -367,17 +421,17 @@ function build_scatter() {
 
           //Create X axis label
     FRAME_8.append("text")
-      .attr("x", VIS_WIDTH / 2 )
-      .attr("y",  Y_SCALE_LENGTH(0) + 90 )
-      .style("text-anchor", "middle")
-      .text("Duration (Minutes)"); 
+    .attr("x", VIS_WIDTH / 2 )
+    .attr("y",  Y_SCALE_LENGTH(0) + 90 )
+    .style("text-anchor", "middle")
+    .text("Duration (Minutes)"); 
 
           //Create Y axis label
     FRAME_8.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 20 )
-      .attr("x", -300)
-      .text("Complexity"); 
+    .attr("transform", "rotate(-90)")
+    .attr("y", 20 )
+    .attr("x", -300)
+    .text("Complexity"); 
 
           // add a y axis to the vis
     FRAME_8.append("g") 
@@ -385,6 +439,8 @@ function build_scatter() {
     .call(d3.axisLeft(Y_SCALE_LENGTH).ticks(10)) 
     .attr("font-size", '10px');
 
+
+            
       // calls brush to vis2
     FRAME_8.call(d3.brush()                 
       .extent([[0,0], [FRAME_WIDTH, FRAME_HEIGHT]])
@@ -392,33 +448,7 @@ function build_scatter() {
       );
 
 
-         //tooltip
-  const TOOLTIP = d3.select("#vis4")
-  .append("div")
-  .attr("class", "tooltip")
-  .style("opacity", 0); 
 
-          //define event handler functions for tooltips
-  function handleMouseover(event, d) {
-          //on mouseover, make opaque 
-    TOOLTIP.style("opacity", 1);
-
-  }
-          //moving the mouse
-  function handleMousemove(event, d) {
-          //position the tooltip and fill in information 
-    TOOLTIP.html("Duration: " + d.duration + "<br>Complexity: " + d.complexity)
-              .style("left", (event.pageX + 10) + "px") //add offset from mouse
-              .style("top", (event.pageY - 50) + "px");
-            }
-
-
-
-          //on mouseleave, make transparent again 
-            function handleMouseleave(event, d) { 
-              TOOLTIP.style("opacity", 0)
-
-            } 
 
             function brush_selection(event) {
               let extent = event.selection;
@@ -427,7 +457,7 @@ function build_scatter() {
     // checks that the brushed functions are highlighted
 
               FRAME_8.classed("selected", function(d){return highlight(extent, (X_SCALE_WIDTH(d.duration)+MARGINS.left), (Y_SCALE_WIDTH(d.complexity)+MARGINS.bottom)) });
-              FRAME2.classed("selected", function(d){return highlight(coords, (X_SCALE_WIDTH(d.rating)+MARGINS.left), (Y_SCALE_WIDTH(d.duration)+MARGINS.bottom)) });
+              FRAME2.classed("selected", function(d){return highlight(extent, (X_SCALE_WIDTH(d.rating)+MARGINS.left), (Y_SCALE_WIDTH(d.duration)+MARGINS.bottom)) });
 
             };
 
@@ -437,12 +467,12 @@ function build_scatter() {
               x1 = coords[1][0],
               y0 = coords[0][1],
               y1 = coords[1][1];
-             return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
+              return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
 
-            };
+            }
           }
-)};
-          build_scatter();
+          )};
+build_scatter();
 
 
 

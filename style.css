@@ -10,7 +10,18 @@ h4 {
 
     padding-left: 100px;   
 }
+#legend ul {
+    list-style: none;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    font-size: 12px;
+}
 
+#legend ul span {
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    margin-right: 0.5em;
+}
 
 
 .tooltip{
