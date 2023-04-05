@@ -33,7 +33,7 @@ h4 {
 
 .containers {
             width: 300px;
-            height: 100px;
+            height: 120px;
             border: 1px solid black;
             margin-bottom: 10px;
             overflow: hidden;
@@ -43,21 +43,42 @@ h4 {
 }
 
 
-#vis2_3{
-    display: flex;
+
+#div45{
+ display: flex;
     justify-content: space-around;
 
+}
+.div4{
+    flex:0 0 65%;
+    border: 5px solid red;
+
+}
+
+.div5{
+    flex: 1;
+    border: 5px solid black; 
 }
 
 /* scatterplot highlight/selection formatting */
   .selected {
     stroke-width: 3px;
     stroke: orange;
-    opacity: 1;
+    opacity: 100;
+
   }
 
-.circle {
+.point {
     stroke-width: 3px;
     stroke: orange;
-    opacity: 1
+    opacity: 75%;
+;
+
 }
+
+
+
+
+
+
+

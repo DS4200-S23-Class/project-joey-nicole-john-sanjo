@@ -171,108 +171,7 @@ const FRAME2 = d3.select("#vis2")
 .attr("width", FRAME_WIDTH)
 .attr("class", "frame"); 
 
-function build_interactive_barchart() {
-  //build bar plot inside of .then
-  d3.csv("DONE.csv").then((data) => {
-      //find max X by returning "rating"
-    const MAX_X_BAR = d3.max(data, (d) => {return (d.rating)});
-      //find max Y by returning "duration" as an int
-    const MAX_Y_BAR = d3.max(data, (d) => {return parseInt(d.duration)});
 
-    //domain and range
-
-    //use scaleBand() because ratings is nominal  
-    const X_SCALE_BAR = d3.scaleBand()
-    //domain are "rating" variables
-    .domain(data.map(function(d) {return d.rating}))
-    .range([0, VIS_WIDTH]).padding(0.25);
-
-    //use scaleLinear() because duration is quantitative and bar length should be proportional to value
-    const Y_SCALE_BAR = d3.scaleLinear()
-    .domain([0, MAX_Y_BAR + 10])
-    //take height as first parameter as coordinates start from top left
-    .range([VIS_HEIGHT,0]);
-
-    //bars with styling
-    let bar_chart = FRAME2.selectAll("bars")
-    
-    //this is passed from .then()
-    .data(data)
-    .enter()
-    .append("rect") //appending attributes below to rect
-            .attr("class", "rect") //add class
-            .attr("x", (d) => { return X_SCALE_BAR(d.rating) + MARGINS.left }) // use d.category for x
-            .attr("y", (d) =>{ return Y_SCALE_BAR(d.duration) + MARGINS.top }) // use d.amount for y
-            .attr("width", X_SCALE_BAR.bandwidth())//width
-            .attr("height", (d) => { return VIS_HEIGHT - Y_SCALE_BAR(d.duration) });//height
-
-
-          // Add an x axis to the vis.
-            FRAME2.append("g") 
-            .attr("transform", "translate(" + MARGINS.left + "," + (VIS_HEIGHT + MARGINS.top) + ")") 
-            .call(d3.axisBottom(X_SCALE_BAR).ticks(14)) 
-            .attr("font-size", '10px'); 
-
-          //Create X axis label
-            FRAME2.append("text")
-            .attr("x", VIS_WIDTH / 2 )
-            .attr("y",  Y_SCALE_BAR(0) + 90 )
-            .style("text-anchor", "middle")
-            .text("Rating"); 
-
-          //Create Y axis label
-            FRAME2.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 20 )
-            .attr("x", -300)
-            .text("Duration (Minutes)"); 
-
-          // add a y axis to the vis
-            FRAME2.append("g") 
-            .attr("transform", "translate(" + MARGINS.top + "," + MARGINS.left + ")") 
-            .call(d3.axisLeft(Y_SCALE_BAR).ticks(10)) 
-            .attr("font-size", '10px');
-
-          //tooltip
-            const TOOLTIP = d3.select("#vis2")
-            .append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0); 
-
-          //define event handler functions for tooltips
-            function handleMouseover(event, d) {
-          //on mouseover, make opaque 
-              TOOLTIP.style("opacity", 1);
-
-            }
-
-          //moving the mouse
-            function handleMousemove(event, d) {
-          //position the tooltip and fill in information 
-              TOOLTIP.html("Category: " + d.rating + "<br>Amount: " + d.duration)
-              .style("left", (event.pageX + 10) + "px") //add offset from mouse
-              .style("top", (event.pageY - 50) + "px")
-            }
-
-
-
-          //on mouseleave, make transparent again 
-            function handleMouseleave(event, d) { 
-              TOOLTIP.style("opacity", 0)
-
-            } 
-
-          //add event listeners
-            FRAME2.selectAll(".rect")
-            .on("mouseover", handleMouseover) 
-            .on("mousemove", handleMousemove)
-            .on("mouseleave", handleMouseleave);   
-
-
-
-          });
-}
-build_interactive_barchart();
 
 const FRAME3 = d3.select("#G") 
 .append("svg") 
@@ -307,7 +206,7 @@ const FRAME7= d3.select("#NR")
 d3.csv("DONE.csv").then(function(data) {
 
   const X_SCALE3 = d3.scaleBand()
-              .domain(data.map((d) => {return d.Species}))
+              .domain(data.map((d) => {return d.rating}))
               .range([0, VIS_WIDTH]);
 
   const Y_SCALE3 = d3.scaleLinear()
@@ -398,7 +297,43 @@ const MAX_Y_BAR = 500;
                   })
                   .attr("r", 5)
                   .attr("class", "point")
+                  .attr("opacity", 1)
                   .attr("id", d => {return d.rating});
+
+let TOOLTIP = d3.select("#vis4")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0); 
+
+          //define event handler functions for tooltips
+            function handleMouseover(event, d) {
+          //on mouseover, make opaque 
+              TOOLTIP.style("opacity", 1);
+
+            }
+
+          //moving the mouse
+            function handleMousemove(event, d) {
+          //position the tooltip and fill in information 
+              TOOLTIP.html("Category: " + d.rating + "<br>Amount: " + d.duration)
+              .style("left", (event.pageX + 10) + "px") //add offset from mouse
+              .style("top", (event.pageY - 50) + "px")
+            }
+
+
+
+          //on mouseleave, make transparent again 
+            function handleMouseleave(event, d) { 
+              TOOLTIP.style("opacity", 0)
+
+            } 
+
+          //add event listeners
+          FRAME_8.selectAll(".point")
+            .on("mouseover", handleMouseover) 
+            .on("mousemove", handleMousemove)
+            .on("mouseleave", handleMouseleave);   
+
 
   // plot vis 2
   let mybar = FRAME_9.selectAll(".bar")
@@ -414,18 +349,45 @@ const MAX_Y_BAR = 500;
                   
                   .attr("id", d => {return d.rating});
 
-                  
-  // create x-axis
-  FRAME_8.append("g")
+    FRAME_8.append("g")
           .attr("transform", "translate(" + 
             MARGINS.left + "," + (MARGINS.top + VIS_HEIGHT) + ")")
-            .call(d3.axisBottom(X_SCALE).ticks(6));
+            .call(d3.axisBottom(X_SCALE).ticks(8));
+  
+  FRAME_8.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 20 )
+            .attr("x", -300)
+            .text("Duration (Minutes)"); 
 
+
+  FRAME_8.append("text")
+            .attr("x", VIS_WIDTH / 2 )
+            .attr("y",  X_SCALE(0) + 90 )
+            .style("text-anchor", "middle")
+            .text("Complexity");
+  
   // create y-axis
   FRAME_8.append("g")
           .attr("transform", "translate(" + 
             MARGINS.left + "," + (MARGINS.top) + ")")
           .call(d3.axisLeft(Y_SCALE).ticks(15));
+  
+  FRAME_8.append("text")
+    .attr("x", LINEVIS_WIDTH/2)
+    .attr("y", 20)
+    .style("text-anchor", "middle")
+    .text("Average Duration for Each Genre");
+    
+
+    FRAME_8.call( d3.brush()                 
+            .extent([[0,0],[FRAME_WIDTH, FRAME_HEIGHT]]) 
+            .on("start brush", updateChart) 
+    )
+  // create x-axis
+
+
+
 
  
   FRAME_9.append("g")
@@ -433,18 +395,32 @@ const MAX_Y_BAR = 500;
             MARGINS.left+ "," + (MARGINS.top + VIS_HEIGHT) + ")")
           .call(d3.axisBottom(X_SCALE3).ticks(10));
 
+  //Create Y axis label
+  FRAME_9.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 20 )
+            .attr("x", -300)
+            .text("Duration (Minutes)"); 
+
   // create y-axis
   FRAME_9.append("g")
           .attr("transform", "translate(" + 
             MARGINS.left + "," + (MARGINS.top) + ")")
           .call(d3.axisLeft(Y_SCALE3));
-    // Add brushing
-    
 
-    FRAME_8.call( d3.brush()                 
-            .extent([[0,0],[FRAME_WIDTH, FRAME_HEIGHT]]) 
-            .on("start brush", updateChart) 
-    )
+  FRAME_9.append("text")
+            .attr("x", VIS_WIDTH / 2 )
+            .attr("y",  Y_SCALE3(0) + 90 )
+            .style("text-anchor", "middle")
+            .text("Rating");
+
+        FRAME_9.append("text")
+    .attr("x", LINEVIS_WIDTH/3)
+    .attr("y", 20)
+    .style("text-anchor", "middle")
+    .text("Average Duration for Each Genre");
+
+
 
     // brushing function
     function updateChart(event) {
