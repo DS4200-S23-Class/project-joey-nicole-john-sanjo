@@ -331,7 +331,7 @@ d3.csv("DONE.csv").then((data) => {
                   })
                   .attr("r", 5)
                   .attr("class", "point")
-                  .attr("opacity", 1)
+                  .attr("opacity", 0.5)
                   .attr("id", d => {return d.rating}); 
 
 
@@ -438,6 +438,7 @@ d3.csv("DONE.csv").then((data) => {
 
   // brushing function, returns true or false if point is in selection area
   function isBrushed(brush_coords, cx, cy) {
+
        var x0 = brush_coords[0][0],
            x1 = brush_coords[1][0],
            y0 = brush_coords[0][1],

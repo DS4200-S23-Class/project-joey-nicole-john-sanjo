@@ -63,18 +63,27 @@ h4 {
 /* scatterplot highlight/selection formatting */
   .selected {
     stroke-width: 3px;
-    stroke: orange;
-    opacity: 100;
+    stroke: orange !important;
+    opacity: 1;
 
   }
 
 .point {
     stroke-width: 3px;
-    stroke: orange;
-    opacity: 75%;
+    stroke: #b85252;
 ;
 
 }
+
+
+/* .circle {
+    stroke-width: 3px;
+    stroke: #b85252;
+    opacity: 0.1;
+;
+
+
+} */
 
 
 
