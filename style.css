@@ -33,7 +33,7 @@ h4 {
 
 .containers {
             width: 300px;
-            height: 150px;
+            height: 100px;
             border: 1px solid black;
             margin-bottom: 10px;
             overflow: hidden;
@@ -52,6 +52,12 @@ h4 {
 /* scatterplot highlight/selection formatting */
   .selected {
     stroke-width: 3px;
-    stroke:rgb(0,0,0);
+    stroke: orange;
     opacity: 1;
   }
+
+.circle {
+    stroke-width: 3px;
+    stroke: orange;
+    opacity: 1
+}

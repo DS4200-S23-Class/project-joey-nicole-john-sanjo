@@ -306,6 +306,14 @@ const FRAME7= d3.select("#NR")
 
 d3.csv("DONE.csv").then(function(data) {
 
+  const X_SCALE3 = d3.scaleBand()
+              .domain(data.map((d) => {return d.Species}))
+              .range([0, VIS_WIDTH]);
+
+  const Y_SCALE3 = d3.scaleLinear()
+              .range([VIS_HEIGHT, 0])
+              .domain([0, 50]);
+
   // filter the data based on the ratings 
   const filtered_data = data.filter(d => ["G", "PG", "PG-13", "R", "NR"].includes(d.rating));
 
@@ -329,6 +337,9 @@ d3.csv("DONE.csv").then(function(data) {
 
 });
 
+
+
+
 const FRAME_8 = d3.select("#vis4") 
   .append("svg") 
   .attr("height", FRAME_HEIGHT)   
@@ -336,144 +347,129 @@ const FRAME_8 = d3.select("#vis4")
   .attr("id", "spsvg")
   .attr("class", "frame");
 
-function build_scatter() {
+
+const FRAME_9 = d3.select("#vis5") 
+  .append("svg") 
+  .attr("height", FRAME_HEIGHT)   
+  .attr("width", FRAME_WIDTH)
+  .attr("id", "spsvg")
+  .attr("class", "frame");
 
 
-  d3.csv("DONE.csv").then((data) => {
+d3.csv("DONE.csv").then((data) => {
 
-    const MAX_X_LENGTH = d3.max(data, (d) => { return parseInt(d.duration); });
-    const MAX_Y_LENGTH = d3.max(data, (d) => { return parseInt(d.complexity); });
+const MAX_Y_BAR = 500;
 
-// creates scale for data 
-    const X_SCALE_WIDTH = d3.scaleLinear() 
-      .domain([0, (MAX_X_LENGTH + 1)]) 
-      .range([0, VIS_WIDTH]); 
+  const X_SCALE3 = d3.scaleBand()
+              .domain(data.map((d) => {return d.rating}))
+              .range([0, VIS_WIDTH]);
 
 
-    const Y_SCALE_LENGTH = d3.scaleLinear() 
-      .domain([0, (MAX_Y_LENGTH + 1)])  
-      .range([VIS_HEIGHT, 0]); 
+  const Y_SCALE3 = d3.scaleLinear()
+               .domain([0, MAX_Y_BAR + 10])
+    //take height as first parameter as coordinates start from top left
+              .range([VIS_HEIGHT,0]);
 
-    const color = d3.scaleOrdinal()
-    .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+  // get max x and y values
+  const MAX_X = d3.max(data, d => {return parseInt(d.duration)});
+  const MAX_Y = d3.max(data, d => {return parseInt(d.complexity)});
 
-    // creates a tooltip
-    let Tooltip = d3.select("#vis4")
-      .append("div")
-      .style("opacity", 0)
-      .attr("class", "tooltip")
-      .style("background-color", "white")
-      .style("border", "solid")
-      .style("border-width", "2px")
-      .style("border-radius", "5px")
-      .style("padding", "5px");
+  // scaling functions
+  const X_SCALE = d3.scaleLinear()
+            .domain([0, (MAX_X + 1.0)])
+              .range([0, VIS_WIDTH]);
 
-    // mouseover activates the tooltip to be seen
-    let mouseover = function(d) {
-      Tooltip
-      .style("opacity", 1);
-    }
+  // range has to go from big to small so that 
+  // the data is flipped along the y-axis (how a user would be 
+  //  used to seeing a plot)
+  const Y_SCALE = d3.scaleLinear()
+            .domain([0, (MAX_Y + 1.0)])
+              .range([(VIS_HEIGHT),0]);
 
-    // mousemove keeps the tooltip next to the mouse
-    let mousemove = function(event, d) {
-      console.log(d)
-      Tooltip
-      .html("Duration: " + d.duration + "<br>Complexity: " + d.complexity)
-      .style("left", (d3.pointer(event)[0]) + "px")
-      .style("top", (d3.pointer(event)[1]+860) + "px");
-    }
+  // plot vis 1
+  let mycirc1 = FRAME_8.selectAll(".point")
+          .data(data)
+            .enter().append("circle")
+                  .attr("cx", d => {
+                      return X_SCALE(parseFloat(d.duration)) + MARGINS.left
+                    })
+                  .attr("cy", d => {
+                      return Y_SCALE(parseFloat(d.complexity)) + MARGINS.top
+                  })
+                  .attr("r", 5)
+                  .attr("class", "point")
+                  .attr("id", d => {return d.rating});
 
-    // mouseleave makes tooltip transparent when outside a bar.
-    let mouseleave = function(d) {
-      Tooltip
-      .style("opacity", 0);
-    }
+  // plot vis 2
+  let mybar = FRAME_9.selectAll(".bar")
+
+          .data(data)
+            .enter().append("rect")
+                  .attr("class", "bar")
+                  .attr("x", d => {
+                      return (X_SCALE3(d.rating) + MARGINS.left);})
+                  .attr("y", (d) =>{ return Y_SCALE3(d.duration) + MARGINS.top })
+                  .attr("width", X_SCALE3.bandwidth() - 5)
+                  .attr("height", (d) => { return VIS_HEIGHT - Y_SCALE3(d.duration) })
+                  
+                  .attr("id", d => {return d.rating});
+
+                  
+  // create x-axis
+  FRAME_8.append("g")
+          .attr("transform", "translate(" + 
+            MARGINS.left + "," + (MARGINS.top + VIS_HEIGHT) + ")")
+            .call(d3.axisBottom(X_SCALE).ticks(6));
+
+  // create y-axis
+  FRAME_8.append("g")
+          .attr("transform", "translate(" + 
+            MARGINS.left + "," + (MARGINS.top) + ")")
+          .call(d3.axisLeft(Y_SCALE).ticks(15));
+
+ 
+  FRAME_9.append("g")
+          .attr("transform", "translate(" + 
+            MARGINS.left+ "," + (MARGINS.top + VIS_HEIGHT) + ")")
+          .call(d3.axisBottom(X_SCALE3).ticks(10));
+
+  // create y-axis
+  FRAME_9.append("g")
+          .attr("transform", "translate(" + 
+            MARGINS.left + "," + (MARGINS.top) + ")")
+          .call(d3.axisLeft(Y_SCALE3));
+    // Add brushing
     
-    FRAME_8.selectAll("points") 
-      .data(data)
-      .enter()
-      .append("circle")
-        .attr("class", "point")
-        .attr("cx", (d) => { return (X_SCALE_WIDTH(d.duration) + MARGINS.left) })
-        .attr("cy", (d) => { return (Y_SCALE_LENGTH(d.complexity) + MARGINS.bottom) })
-        .attr("r", 4)
-        .attr("stroke", function(d){ return color(d[0]) })
-        .attr("rating", (d) => { return (d.rating) })
-;
-    FRAME_8.selectAll(".circle")
-        .on("mouseover", mouseover)
-        .on("mousemove", mousemove)
-        .on("mouseleave", mouseleave);
-      
 
-            //Create Title 
-    FRAME_8.append("text")
-    .attr("x", LINEVIS_WIDTH/2)
-    .attr("y", 20)
-    .style("text-anchor", "middle")
-    .text("Movie Complexity by Duration");
+    FRAME_8.call( d3.brush()                 
+            .extent([[0,0],[FRAME_WIDTH, FRAME_HEIGHT]]) 
+            .on("start brush", updateChart) 
+    )
 
-         // Add an x axis to the vis.
-    FRAME_8.append("g") 
-    .attr("transform", "translate(" + MARGINS.left + "," + (VIS_HEIGHT + MARGINS.top) + ")") 
-    .call(d3.axisBottom(X_SCALE_WIDTH).ticks(14)) 
-    .attr("font-size", '10px'); 
-
-          //Create X axis label
-    FRAME_8.append("text")
-    .attr("x", VIS_WIDTH / 2 )
-    .attr("y",  Y_SCALE_LENGTH(0) + 90 )
-    .style("text-anchor", "middle")
-    .text("Duration (Minutes)"); 
-
-          //Create Y axis label
-    FRAME_8.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 20 )
-    .attr("x", -300)
-    .text("Complexity"); 
-
-          // add a y axis to the vis
-    FRAME_8.append("g") 
-    .attr("transform", "translate(" + MARGINS.top + "," + MARGINS.left + ")") 
-    .call(d3.axisLeft(Y_SCALE_LENGTH).ticks(10)) 
-    .attr("font-size", '10px');
+    // brushing function
+    function updateChart(event) {
+        const extent = event.selection;
+        // change the class of each point or bar if corresponding was brushed
+        mycirc1.classed("selected", function(d){
+                        return isBrushed(extent, 
+                        (X_SCALE(d.duration) + MARGINS.left), (Y_SCALE(d.complexity) + MARGINS.top))})                                                      
+        mybar.classed("selected", function(d){
+                        return isBrushed(extent, 
+                        (X_SCALE(d.duration) + MARGINS.left), (Y_SCALE(d.complexity) + MARGINS.top))})                                                           
 
 
-            
-      // calls brush to vis2
-    FRAME_8.call(d3.brush()                 
-      .extent([[0,0], [FRAME_WIDTH, FRAME_HEIGHT]])
-      .on("start brush", brush_selection)
-      );
+  // brushing function, returns true or false if point is in selection area
+  function isBrushed(brush_coords, cx, cy) {
+       var x0 = brush_coords[0][0],
+           x1 = brush_coords[1][0],
+           y0 = brush_coords[0][1],
+           y1 = brush_coords[1][1];
+      return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1}; // returns TRUE or FALSE
+
+
+};});
 
 
 
 
-            function brush_selection(event) {
-              let extent = event.selection;
-
-
-    // checks that the brushed functions are highlighted
-
-              FRAME_8.classed("selected", function(d){return highlight(extent, (X_SCALE_WIDTH(d.duration)+MARGINS.left), (Y_SCALE_WIDTH(d.complexity)+MARGINS.bottom)) });
-              FRAME2.classed("selected", function(d){return highlight(extent, (X_SCALE_WIDTH(d.rating)+MARGINS.left), (Y_SCALE_WIDTH(d.duration)+MARGINS.bottom)) });
-
-            };
-
-  // check whether a point is in the selection or not
-            function highlight(coords, cx, cy) {
-              let x0 = coords[0][0],
-              x1 = coords[1][0],
-              y0 = coords[0][1],
-              y1 = coords[1][1];
-              return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
-
-            }
-          }
-          )};
-build_scatter();
-
-
-
-
+  
