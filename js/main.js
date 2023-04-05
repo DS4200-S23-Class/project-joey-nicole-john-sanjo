@@ -257,6 +257,8 @@ const FRAME_9 = d3.select("#vis5")
 
 d3.csv("DONE.csv").then((data) => {
 
+
+
   const MAX_Y_BAR = 500;
 
   const X_SCALE3 = d3.scaleBand()
@@ -272,7 +274,6 @@ d3.csv("DONE.csv").then((data) => {
   // get max x and y values
   const MAX_X = d3.max(data, d => {return parseInt(d.duration)});
   const MAX_Y = d3.max(data, d => {return parseInt(d.complexity)});
-
   // scaling functions
   const X_SCALE = d3.scaleLinear()
             .domain([0, (MAX_X + 1.0)])
@@ -331,25 +332,60 @@ d3.csv("DONE.csv").then((data) => {
                   })
                   .attr("r", 5)
                   .attr("class", "point")
-                  .attr("opacity", 0.5)
+                  .attr("opacity", .75)
+                   .attr("fill", function (d) {
+                      if(d.rating === "G") {
+                        return "pink"
+                      } else if (d.rating === "PG") {
+                        return "lightblue"
+                      } else if (d.rating=== "PG-13"){
+                        return "lightgreen"
+                      }
+                        else if (d.rating === "R"){
+                          return "gold"
+                        }
+                        else {
+                          return "black"
+                        }
+                      
+
+                    })
+
                   .attr("id", d => {return d.rating}); 
 
 
   // plot vis 2
   let mybar = FRAME_9.selectAll(".bar")
-
-          .data(data)
+         .data(data)
             .enter().append("rect")
                   .attr("class", "bar")
                   .attr("x", d => {
-                      return (X_SCALE3(d.rating) + MARGINS.left);})
+                      return (X_SCALE3(d.rating) + MARGINS.left)})
                   .attr("y", (d) =>{ return Y_SCALE3(d.duration) + MARGINS.top })
                   .attr("width", X_SCALE3.bandwidth() - 5)
                   .attr("height", (d) => { return VIS_HEIGHT - Y_SCALE3(d.duration) })
                   .attr("id", d => {return d.rating})
                   .on("mouseover", mouseover_bar)
                   .on("mousemove", mousemove_bar)
-                  .on("mouseleave", mouseleave_bar);
+                  .on("mouseleave", mouseleave_bar)
+                                     .attr("fill", function (d) {
+                      if(d.rating === "G") {
+                        return "pink"
+                      } else if (d.rating === "PG") {
+                        return "lightblue"
+                      } else if (d.rating=== "PG-13"){
+                        return "lightgreen"
+                      }
+                        else if (d.rating === "R"){
+                          return "gold"
+                        }
+                        else {
+                          return "black"
+                        }
+                      
+
+                    });
+
 
     FRAME_8.append("g")
           .attr("transform", "translate(" + 
@@ -451,7 +487,36 @@ d3.csv("DONE.csv").then((data) => {
 
 };});
 
+// Legends for linked bar chart and scatter plot 
+    FRAME_8.append("circle").attr("cx",80).attr("cy",40).attr("r", 6).style("fill", "pink");
+ FRAME_8.append("text").attr("x", 100).attr("y", 40).text("G").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
+  
+   FRAME_8.append("circle").attr("cx",80).attr("cy",60).attr("r", 6).style("fill", "lightblue");
+    FRAME_8.append("text").attr("x", 100).attr("y", 60).text("PG").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ; 
+    
+    FRAME_8.append("circle").attr("cx",80).attr("cy",80).attr("r", 6).style("fill", "lightgreen");
+    FRAME_8.append("text").attr("x", 100).attr("y", 80).text("PG-13").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
 
+    FRAME_8.append("circle").attr("cx",80).attr("cy",100).attr("r", 6).style("fill", "gold");
+    FRAME_8.append("text").attr("x", 100).attr("y", 100).text("R").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ; 
+
+    FRAME_8.append("circle").attr("cx",80).attr("cy",120).attr("r", 6).style("fill", "black");
+ FRAME_8.append("text").attr("x", 100).attr("y", 120).text("NR").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
+  
+       FRAME_9.append("circle").attr("cx",80).attr("cy",40).attr("r", 6).style("fill", "pink");
+ FRAME_9.append("text").attr("x", 100).attr("y", 40).text("G").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
+  
+   FRAME_9.append("circle").attr("cx",80).attr("cy",60).attr("r", 6).style("fill", "lightblue");
+    FRAME_9.append("text").attr("x", 100).attr("y", 60).text("PG").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ; 
+    
+    FRAME_9.append("circle").attr("cx",80).attr("cy",80).attr("r", 6).style("fill", "lightgreen");
+    FRAME_9.append("text").attr("x", 100).attr("y", 80).text("PG-13").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
+
+    FRAME_9.append("circle").attr("cx",80).attr("cy",100).attr("r", 6).style("fill", "gold");
+    FRAME_9.append("text").attr("x", 100).attr("y", 100).text("R").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ; 
+
+    FRAME_9.append("circle").attr("cx",80).attr("cy",120).attr("r", 6).style("fill", "black");
+ FRAME_9.append("text").attr("x", 100).attr("y", 120).text("NR").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
 
 
   

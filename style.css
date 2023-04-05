@@ -80,8 +80,8 @@ flex-direction: column;
   }
 
 .point {
-    stroke-width: 3px;
-    stroke: #b85252;
+    stroke-width: 2px;
+    stroke: "grey;";
 ;
 
 }
