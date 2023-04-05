@@ -65,7 +65,7 @@ function build_line_plot(addpoints, newdata) {
       Tooltip
       .html("Rating: " + d[0])
       .style("left", (d3.pointer(event)[0]) + "px")
-      .style("top", (d3.pointer(event)[1]+860) + "px");
+      .style("top", (d3.pointer(event)[1]+1300) + "px");
     }
 
     // mouseleave makes tooltip transparent when outside a bar.
@@ -308,8 +308,8 @@ d3.csv("DONE.csv").then((data) => {
     console.log(d)
     Tooltip_bar
     .html("Genres: " + d.listed_in)
-    .style("left", (d3.pointer(event)[0]) + "px")
-    .style("top", (d3.pointer(event)[1]+2000) + "px");
+    .style("left", (d3.pointer(event)[0] + 500) + "px")
+    .style("top", (d3.pointer(event)[1]+1800) + "px");
   }
 
   // mouseleave makes tooltip transparent when outside a bar.
@@ -360,14 +360,16 @@ d3.csv("DONE.csv").then((data) => {
             .attr("transform", "rotate(-90)")
             .attr("y", 20 )
             .attr("x", -300)
-            .text("Duration (Minutes)"); 
+            .style("fill", "black")
+            .text("Complexity"); 
 
 
   FRAME_8.append("text")
             .attr("x", VIS_WIDTH / 2 )
-            .attr("y",  X_SCALE(0) + 90 )
+            .attr("y",  X_SCALE(0) + 490 )
             .style("text-anchor", "middle")
-            .text("Complexity");
+            .style("fill", "black")
+            .text("Duration (Minutes)");
   
   // create y-axis
   FRAME_8.append("g")
@@ -376,10 +378,11 @@ d3.csv("DONE.csv").then((data) => {
           .call(d3.axisLeft(Y_SCALE).ticks(15));
   
   FRAME_8.append("text")
-    .attr("x", LINEVIS_WIDTH/2)
-    .attr("y", 20)
+    .attr("x", LINEVIS_WIDTH/3)
+    .attr("y", 30)
     .style("text-anchor", "middle")
-    .text("Average Duration for Each Genre");
+    .style("fill", "black")
+    .text("Complexity and Duration for All Movies");
     
 
     FRAME_8.call( d3.brush()                 

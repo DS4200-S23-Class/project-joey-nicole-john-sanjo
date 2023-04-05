@@ -18,7 +18,7 @@
 
     <div>
         <h2>Motivation</h2>
-        The rise of streaming platforms like Netflix has led to an explosion
+        <p>The rise of streaming platforms like Netflix has led to an explosion
         in the number of movies and TV shows available to the public. With
         so much content to choose from, it can be overwhelming for viewers
         to make informed decisions about what to watch. Our visualization
@@ -27,16 +27,16 @@
         throughout the years. By visualizing data about the Motion Picture
         Association rating system, as well as genre and release year informa-
         tion, our tool will help users make more informed decisions about
-        what to watch.
+        what to watch.</p>
         
-        Our tool is designed for movie enthusiasts and the general public
+        <p>Our tool is designed for movie enthusiasts and the general public
         who are interested in understanding the history and evolution of film
         and TV culture. It will support two domain tasks: identifying which
         genres tend to generate certain ratings and analyzing movie and
         TV show ratings throughout the years. By supporting these tasks,
         our tool will enable users to better understand the cultural trends
         and shifts in the film and TV industry, and make more informed
-        decisions about what movies and TV shows to watch. 
+        decisions about what movies and TV shows to watch. </p>
 
         This visualization tool will cater to movie enthusiasts and the general
         public to better illustrate the progression of movie and TV show
@@ -65,7 +65,7 @@
         user data and the societal impacts of this dataset are low ethically
         speaking.
 
-        To clean the dataset, we used Python to sift through missing
+        <p>To clean the dataset, we used Python to sift through missing
         values and omit unnecessary data.
         Additionally, rows with null values were dropped. 
         We then filtered the data such that the only
@@ -88,7 +88,7 @@
         This was generated using data from the original csv to contain infomation 
         neccessary to generate the line plot. There is a column for release year, 
         a column for rating, and a column for the count. After cleaning, there were no unexpected
-        values or outliers.
+        values or outliers.</p>
 
         The design of the visualization changed after the submission of pm2. Starting at pm-03 the plan was there would be 
         three visuals in total that all relate to some aspect of movies. The lineplot would show the number 
@@ -97,12 +97,23 @@
         part of the visual that has not been implemented will appear when you click on a specific year from the line graph,
         and will show the average complexity of movies from each genre of that year in a movie ticket shape. 
         This will provide important information about movies based on the rating they recieved. 
+        <p>This design then changed significantly after pm-03 due to the fact that we had to restart the code to fix linking. The design kept the scatterplot, as well as the tickets (just as an added bonus for the theme), but added a bar plot of the Ratings, looking at their average duration. This was then linked to a scatterplot showing the duration by complexity for all movies. You are able to brush over points in the scatterplot to highlight what the associated rating is in the bar chart. The bar chart also shows a tooltip of what genres are included.</p>
+
+        <p> "Movies Released by Year per Rating": This graph looks at all ratings included in the dataset, with an emphasis on how much TV-MA contributes to the overall count of movies. Alongside the legend, the tooltip function helps identify which rating is which when hovering over.</p>
+
+        <p> "Complexity and Duration of All Movies": This graph looks at complexity by duration for all movies in the dataset. You can select via brushing as many points as you want to highlight in the neighboring bar graph which ratings from the main five utilized ratings (G, PG, PG-13, R, NR) are being seen.</p>
+
+        <p> "Average Duration for Each Genre": This graph, as explained prior, is connected to the scatterplot and shows the average duration of movies for each genre via Tooltip. </p>
+
+        <p> Movie Tickets: As an added bonus, we included movie tickets with average complexities for each genre</p>
+
     </div>
 
     <div>
         <h2>Visualization</h2>
         <h4>Movies Released Per Year By Rating</h4>
         <div id='vis1'> 
+            <p>  </p>
             <div id="legend"></div>
 
         </div>
@@ -111,14 +122,16 @@
     </div>
 
     
-<div id= "vis45">
+<div id= "vis45", class = "flex-container">
 
-    <div id = "vis4"> </div>
-    <div id = "vis5"> </div>
+    <div id = "vis4" class = "flex-child"> </div>
+   
+    <div id = "vis5" class = "flex-child">
+    </div>
 </div>
 
 
-<div id="vis3">
+<div id="vis3", class = "ticket-container">
 <div id="G-score" class="containers">
     <p class="heading">Ticket Stub: Admit 1</p>
     <p class="heading">Average Complexity for Rated G Films</p>
