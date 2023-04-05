@@ -257,7 +257,7 @@ const FRAME_9 = d3.select("#vis5")
 
 d3.csv("DONE.csv").then((data) => {
 
-const MAX_Y_BAR = 500;
+  const MAX_Y_BAR = 500;
 
   const X_SCALE3 = d3.scaleBand()
               .domain(data.map((d) => {return d.rating}))
@@ -285,10 +285,44 @@ const MAX_Y_BAR = 500;
             .domain([0, (MAX_Y + 1.0)])
               .range([(VIS_HEIGHT),0]);
 
+
+  // creates a tooltip
+  let Tooltip_bar = d3.select("#vis5")
+  .append("div")
+  .style("opacity", 0)
+  .attr("class", "tooltip")
+  .style("background-color", "white")
+  .style("border", "solid")
+  .style("border-width", "2px")
+  .style("border-radius", "5px")
+  .style("padding", "5px");
+
+  // mouseover activates the tooltip to be seen
+  let mouseover_bar = function(d) {
+    Tooltip_bar
+    .style("opacity", 1);
+  }
+
+  // mousemove keeps the tooltip next to the mouse
+  let mousemove_bar = function(event, d) {
+    console.log(d)
+    Tooltip_bar
+    .html("Genres: " + d.listed_in)
+    .style("left", (d3.pointer(event)[0]) + "px")
+    .style("top", (d3.pointer(event)[1]+2000) + "px");
+  }
+
+  // mouseleave makes tooltip transparent when outside a bar.
+  let mouseleave_bar = function(d) {
+    Tooltip_bar
+    .style("opacity", 0);
+  }
+
   // plot vis 1
   let mycirc1 = FRAME_8.selectAll(".point")
           .data(data)
-            .enter().append("circle")
+          .enter()
+          .append("circle")
                   .attr("cx", d => {
                       return X_SCALE(parseFloat(d.duration)) + MARGINS.left
                     })
@@ -298,41 +332,7 @@ const MAX_Y_BAR = 500;
                   .attr("r", 5)
                   .attr("class", "point")
                   .attr("opacity", 1)
-                  .attr("id", d => {return d.rating});
-
-let TOOLTIP = d3.select("#vis4")
-            .append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0); 
-
-          //define event handler functions for tooltips
-            function handleMouseover(event, d) {
-          //on mouseover, make opaque 
-              TOOLTIP.style("opacity", 1);
-
-            }
-
-          //moving the mouse
-            function handleMousemove(event, d) {
-          //position the tooltip and fill in information 
-              TOOLTIP.html("Category: " + d.rating + "<br>Amount: " + d.duration)
-              .style("left", (event.pageX + 10) + "px") //add offset from mouse
-              .style("top", (event.pageY - 50) + "px")
-            }
-
-
-
-          //on mouseleave, make transparent again 
-            function handleMouseleave(event, d) { 
-              TOOLTIP.style("opacity", 0)
-
-            } 
-
-          //add event listeners
-          FRAME_8.selectAll(".point")
-            .on("mouseover", handleMouseover) 
-            .on("mousemove", handleMousemove)
-            .on("mouseleave", handleMouseleave);   
+                  .attr("id", d => {return d.rating}); 
 
 
   // plot vis 2
@@ -346,8 +346,10 @@ let TOOLTIP = d3.select("#vis4")
                   .attr("y", (d) =>{ return Y_SCALE3(d.duration) + MARGINS.top })
                   .attr("width", X_SCALE3.bandwidth() - 5)
                   .attr("height", (d) => { return VIS_HEIGHT - Y_SCALE3(d.duration) })
-                  
-                  .attr("id", d => {return d.rating});
+                  .attr("id", d => {return d.rating})
+                  .on("mouseover", mouseover_bar)
+                  .on("mousemove", mousemove_bar)
+                  .on("mouseleave", mouseleave_bar);
 
     FRAME_8.append("g")
           .attr("transform", "translate(" + 
