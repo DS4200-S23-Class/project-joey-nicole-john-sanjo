@@ -1,3 +1,5 @@
+
+// set frames and dimensions 
 const FRAME_HEIGHT = 500;
 const FRAME_WIDTH = 500; 
 
@@ -174,44 +176,6 @@ function produce_tickets (rating){
 
 
 
-// const FRAME3 = d3.select("#G") 
-// .append("svg") 
-// .attr("height", TICK_HEIGHT)   
-// .attr("width", TICK_WIDTH)
-// .attr("class", "frame"); 
-
-
-
-// const FRAME4= d3.select("#PG") 
-// .append("svg") 
-// .attr("height", TICK_HEIGHT)   
-// .attr("width", TICK_WIDTH)
-// .attr("class", "frame"); 
-
-
-
-// const FRAME5= d3.select("#PG-13") 
-// .append("svg") 
-// .attr("height", TICK_HEIGHT)   
-// .attr("width", TICK_WIDTH)
-// .attr("class", "frame");
-
-
-
-// const FRAME6= d3.select("#R") 
-// .append("svg") 
-// .attr("height", TICK_HEIGHT)   
-// .attr("width", TICK_WIDTH)
-// .attr("class", "frame");
-
-
-// const FRAME7= d3.select("#NR") 
-// .append("svg") 
-// .attr("height", TICK_HEIGHT)   
-// .attr("width", TICK_WIDTH)
-// .attr("class", "frame");
-
-
   d3.csv("DONE.csv").then(function(data) {
 
     const X_SCALE3 = d3.scaleBand()
@@ -235,7 +199,7 @@ function produce_tickets (rating){
       mean_complexity_scores[key] = (mean_complexity_score).toFixed(2);
     });
 
-//replace 'mean_complexity_scores' with  dictionary of mean complexity scores
+//r set up tickets with complexity scores being able to be clicked
     switch(rating) {
     case "G":
       {
@@ -283,11 +247,11 @@ default:{
 
 }
 
-
+// create frames 
 const FRAME_8 = d3.select("#vis4") 
 .append("svg") 
 .attr("height", FRAME_HEIGHT)   
-.attr("width", FRAME_WIDTH)
+.attr("width", FRAME_WIDTH+200)
 .attr("id", "spsvg")
 .attr("class", "frame");
 
@@ -299,11 +263,11 @@ const FRAME_9 = d3.select("#vis5")
 .attr("id", "spsvg")
 .attr("class", "frame");
 
-
+// load in CSV
 d3.csv("DONE.csv").then((data) => {
 
 
-
+  // setting maxes, vizualizations, and scalings
   const MAX_Y_BAR = 130;
 
   const X_SCALE3 = d3.scaleBand()
@@ -322,11 +286,9 @@ d3.csv("DONE.csv").then((data) => {
 // scaling functions
   const X_SCALE = d3.scaleLinear()
   .domain([0, (MAX_X + 1.0)])
-  .range([0, VIS_WIDTH]);
+  .range([0, VIS_WIDTH + 200]);
 
-// range has to go from big to small so that 
-// the data is flipped along the y-axis (how a user would be 
-//  used to seeing a plot)
+
   const Y_SCALE = d3.scaleLinear()
   .domain([0, (MAX_Y + 1.0)])
   .range([(VIS_HEIGHT),0]);
@@ -349,11 +311,12 @@ d3.csv("DONE.csv").then((data) => {
     .style("opacity", 1);
   }
 
+
 // mousemove keeps the tooltip next to the mouse
   let mousemove_bar = function(event, d) {
 
     Tooltip_bar
-    .html("Genres: " + d.listed_in)
+    .html("Movie Count: " + d.rat_counts + "\n" + "Average Duration: " + d.avg_dur)
     .style("left", (d3.pointer(event)[0] + 500) + "px")
     .style("top", (d3.pointer(event)[1]+1800) + "px");
   }
@@ -364,7 +327,7 @@ d3.csv("DONE.csv").then((data) => {
     .style("opacity", 0);
   }
 
-// plot vis 1
+// plot scatterplot 
   let mycirc1 = FRAME_8.selectAll(".point")
   .data(data)
   .enter()
@@ -400,37 +363,8 @@ d3.csv("DONE.csv").then((data) => {
 
 
 
-// want an array of 5 elements with that information
-// do data process outside render function
-  // right after datalist, get new array for bar data 
-  // combine w/ average first
-  // d3 average function (d3.mean())
-  // create array for each category that contains durations for each movie as just numbers, then use 
-  //d3.mean() for average on each category
-    //js mapping function so for every element in the array has a function applied to it and replaces element wi
-    // with output of funciton
-  // map: https://www.w3schools.com/jsref/jsref_map.asp
-  // filter: https://www.w3schools.com/jsref/jsref_filter.asp
-  // use filter function to filter out for different categories
-    // if this function is true: keep 
-        //(item) => return item.rating === 'pg-13'
-        // then use the mapping function 
-          // (item) => return item.duration
-          //avgDuration = d3.mean(), then create a new array with those means and associated ratings
 
-              //[
-//  {
- //    rating: 'pg-13',
-//      duration: avgDuration
- // },
-//    {
-//     rating: 'pg',
-  //   duration: avgDuration
- // },
-//]
-
-
-// plot vis 2
+// plot bar plot 
   let mybar = FRAME_9.selectAll(".bar")
   .data(data)
   .enter().append("rect")
@@ -463,7 +397,7 @@ d3.csv("DONE.csv").then((data) => {
 
   });
 
-
+  // axes and texts
   FRAME_8.append("g")
   .attr("transform", "translate(" + 
     MARGINS.left + "," + (MARGINS.top + VIS_HEIGHT) + ")")
@@ -478,13 +412,12 @@ d3.csv("DONE.csv").then((data) => {
 
 
   FRAME_8.append("text")
-  .attr("x", VIS_WIDTH / 2 )
+  .attr("x", (VIS_WIDTH / 2) + 150)
   .attr("y",  X_SCALE(0) + 490 )
   .style("text-anchor", "middle")
   .style("fill", "black")
   .text("Duration (Minutes)");
 
-// create y-axis
   FRAME_8.append("g")
   .attr("transform", "translate(" + 
     MARGINS.left + "," + (MARGINS.top) + ")")
@@ -502,11 +435,6 @@ d3.csv("DONE.csv").then((data) => {
     .extent([[0,0],[FRAME_WIDTH, FRAME_HEIGHT]]) 
     .on("start brush", updateChart) 
     )
-// create x-axis
-
-
-
-
 
   FRAME_9.append("g")
   .attr("transform", "translate(" + 
@@ -595,6 +523,8 @@ FRAME_9.append("text").attr("x", 100).attr("y", 100).text("R").style("font-size"
 FRAME_9.append("circle").attr("cx",80).attr("cy",120).attr("r", 6).style("fill", "black");
 FRAME_9.append("text").attr("x", 100).attr("y", 120).text("NR").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
 
+
+// clicks for creating tickets based on rating selected. 
 let hasBeenClickedG, hasBeenClickedPG, hasBeenClickedPG13, hasBeenClickedR, hasBeenClickedNR = false;
 
 function mouseClickEvent(event, d) {
