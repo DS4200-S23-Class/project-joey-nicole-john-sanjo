@@ -104,7 +104,7 @@
 
         <p> "Average Duration for Each Genre": This graph, as explained prior, is connected to the scatterplot and shows the average duration of movies for each genre via Tooltip. </p>
 
-        <p> Movie Tickets: As an added bonus, we included movie tickets with average complexities for each genre. Click on a genre in the bar chart to see the values appear in the tickets</p>
+        <p> Movie Tickets: As an added bonus, we included movie tickets with average complexities for each genre. Click on a genre in the bar chart to see your ticket stub</p>
 
     </div>
 
@@ -130,34 +130,39 @@
     </div>
 </div>
 
-  <button id = "button" type='button' onclick="mouseClickEvent"()">Click me</button>
+  <button id = "button" type='button' onclick="refreshClick()" style="display: none;">Clear output</button>
 <div id="vis3", class = "ticket-container">
 
-<div id="G-score" class="containers">
+<div id="G-score" class="containers" style="display: none;">
 
     <p class="heading">Ticket Stub: Admit 1</p>
     <p class="heading">Average Complexity for Rated G Films</p>
+    <p id = "G-score-value" class="heading"></p>
     <div class="inner1"></div>
   </div>
-    <div id = "PG-score" class="containers">
+    <div id = "PG-score" class="containers" style="display: none;">
         <p class="heading">Ticket Stub: Admit 1</p>
         <p class = "heading"> Average Complexity for Rated PG Films</p>
+        <p id = "PG-score-value" class="heading"></p>
         <div class="inner1"></div>
     </div>
-    <div id = "PG-13-score" class="containers">
+    <div id = "PG-13-score" class="containers" style="display: none;">
         <p class="heading">Ticket Stub: Admit 1</p>
         <p class = "heading"> Average Complexity for Rated PG-13 Films</p>
+        <p id = "PG-13-score-value" class="heading"></p>
         <div class="inner1"></div>
     </div>
 
-    <div id = "R-score" class="containers">
+    <div id = "R-score" class="containers" style="display: none;">
         <p class="heading">Ticket Stub: Admit 1</p>
         <p class = "heading"> Average Complexity for Rated R Films</p>
+        <p class="heading" id = "R-score-value"></p>
         <div class="inner1"></div>
     </div>
-    <div id = "NR-score" class="containers">
+    <div id = "NR-score" class="containers" style="display: none;">
         <p class="heading">Ticket Stub: Admit 1</p>
         <p class = "heading"> Average Complexity for Not Rated Films</p>
+        <p class="heading" id = "NR-score-value"></p>
         <div class="inner1"></div>
     </div>
 
