@@ -32,7 +32,7 @@ function display_rows(){
 
     for (let i=0; i< print_len; i++)
     {
-      console.log(data[i]);
+      
     }
   });
 }
@@ -61,7 +61,7 @@ function build_line_plot(addpoints, newdata) {
 
     // mousemove keeps the tooltip next to the mouse
     let mousemove = function(event, d) {
-      console.log(d)
+      
       Tooltip
       .html("Rating: " + d[0])
       .style("left", (d3.pointer(event)[0]) + "px")
@@ -98,7 +98,7 @@ function build_line_plot(addpoints, newdata) {
     // color palette
     const color = d3.scaleOrdinal()
     .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
-console.log(grouped)
+
     // Draw the line
     FRAME1.selectAll(".line")
     .data(grouped)
@@ -164,6 +164,7 @@ console.log(grouped)
 
 build_line_plot();
 
+function produce_tickets (){
   //build frame for bar chart
 const FRAME2 = d3.select("#vis2") 
 .append("svg") 
@@ -225,8 +226,7 @@ d3.csv("DONE.csv").then(function(data) {
     const mean_complexity_score = d3.mean(value.map(d => parseInt(d.complexity)));
     mean_complexity_scores[key] = (mean_complexity_score).toFixed(2);
   });
-
-  console.log(mean_complexity_scores); 
+ 
 //replace 'mean_complexity_scores' with  dictionary of mean complexity scores
   document.getElementById("G-score").innerHTML += " " + mean_complexity_scores['G'];
   document.getElementById("PG-score").innerHTML += " " + mean_complexity_scores['PG'];
@@ -236,7 +236,7 @@ d3.csv("DONE.csv").then(function(data) {
 
 });
 
-
+}
 
 
 const FRAME_8 = d3.select("#vis4") 
@@ -306,7 +306,7 @@ d3.csv("DONE.csv").then((data) => {
 
   // mousemove keeps the tooltip next to the mouse
   let mousemove_bar = function(event, d) {
-    console.log(d)
+  
     Tooltip_bar
     .html("Genres: " + d.listed_in)
     .style("left", (d3.pointer(event)[0] + 500) + "px")
@@ -353,6 +353,39 @@ d3.csv("DONE.csv").then((data) => {
 
                   .attr("id", d => {return d.rating}); 
 
+  d3.selectAll(".bar")
+    .remove();
+  console.log(data)
+
+  // want an array of 5 elements with that information
+  // do data process outside render function
+    // right after datalist, get new array for bar data 
+    // combine w/ average first
+    // d3 average function (d3.mean())
+    // create array for each category that contains durations for each movie as just numbers, then use 
+    //d3.mean() for average on each category
+      //js mapping function so for every element in the array has a function applied to it and replaces element wi
+      // with output of funciton
+    // map: https://www.w3schools.com/jsref/jsref_map.asp
+    // filter: https://www.w3schools.com/jsref/jsref_filter.asp
+    // use filter function to filter out for different categories
+      // if this function is true: keep 
+          //(item) => return item.rating === 'pg-13'
+          // then use the mapping function 
+            // (item) => return item.duration
+            //avgDuration = d3.mean(), then create a new array with those means and associated ratings
+
+                //[
+ //  {
+   //    rating: 'pg-13',
+ //      duration: avgDuration
+   // },
+//    {
+  //     rating: 'pg',
+    //   duration: avgDuration
+   // },
+//]
+
 
   // plot vis 2
   let mybar = FRAME_9.selectAll(".bar")
@@ -368,6 +401,7 @@ d3.csv("DONE.csv").then((data) => {
                   .on("mouseover", mouseover_bar)
                   .on("mousemove", mousemove_bar)
                   .on("mouseleave", mouseleave_bar)
+                  .on("click", mouseClickEvent)
                                      .attr("fill", function (d) {
                       if(d.rating === "G") {
                         return "pink"
@@ -518,5 +552,11 @@ d3.csv("DONE.csv").then((data) => {
     FRAME_9.append("circle").attr("cx",80).attr("cy",120).attr("r", 6).style("fill", "black");
  FRAME_9.append("text").attr("x", 100).attr("y", 120).text("NR").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
 
+
+function mouseClickEvent(event, d) {
+  
+    
+    produce_tickets(d.rating)
+}
 
   

@@ -7,7 +7,7 @@
 
     <script src="js/d3.v6.1.1/d3.min.js"></script>
 
-    <title>Netlfix Movie Genre Popularity </title>
+    <title class = "center"> Netlfix Movie Genre Popularity</title>
 </head>
 
 
@@ -16,7 +16,7 @@
     <h1>Analysis of Netflix Movie Genre Popularity in the United States</h1>
 
     <div>
-        <h2>Motivation</h2>
+        <h2 class = "center">Motivation</h2>
         <p>The rise of streaming platforms like Netflix has led to an explosion
         in the number of movies and TV shows available to the public. With
         so much content to choose from, it can be overwhelming for viewers
@@ -51,9 +51,9 @@
     </div>
 
     <div>
-        <h2>Background</h2>
+        <h2 class = "center">Background</h2>
        
-        <h3>Data</h3>
+        <h3 class = "center" >Data</h3>
         The selected data comes from Kaggle, and is a compiled
         list of Netflix movies and TV shows, with related vari-
         ables such as cast, director, release date, ratings, and more
@@ -104,13 +104,13 @@
 
         <p> "Average Duration for Each Genre": This graph, as explained prior, is connected to the scatterplot and shows the average duration of movies for each genre via Tooltip. </p>
 
-        <p> Movie Tickets: As an added bonus, we included movie tickets with average complexities for each genre</p>
+        <p> Movie Tickets: As an added bonus, we included movie tickets with average complexities for each genre. Click on a genre in the bar chart to see the values appear in the tickets</p>
 
     </div>
 
     <div>
-        <h2>Visualization</h2>
-        <h4>Movies Released Per Year By Rating</h4>
+        <h2 class = "center">Visualization</h2>
+        <h4 class = "center">Movies Released Per Year By Rating</h4>
         <div id='vis1'> 
             <p>  </p>
             <div class = "legend"></div>
@@ -130,9 +130,11 @@
     </div>
 </div>
 
-
+  <button id = "button" type='button' onclick="mouseClickEvent"()">Click me</button>
 <div id="vis3", class = "ticket-container">
+
 <div id="G-score" class="containers">
+
     <p class="heading">Ticket Stub: Admit 1</p>
     <p class="heading">Average Complexity for Rated G Films</p>
     <div class="inner1"></div>
@@ -158,6 +160,7 @@
         <p class = "heading"> Average Complexity for Not Rated Films</p>
         <div class="inner1"></div>
     </div>
+
 </div>
 
 <h2>Acknowledgements</h2>
