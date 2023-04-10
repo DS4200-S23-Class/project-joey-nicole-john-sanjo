@@ -474,10 +474,10 @@ d3.csv("DONE.csv").then((data) => {
       // change the class of each point or bar if corresponding was brushed
     mycirc1.classed("selected", function(d){
       return isBrushed(extent, 
-        ((X_SCALE+200)(d.duration) + MARGINS.left), (Y_SCALE(d.complexity) + MARGINS.top))})                                                      
+        (X_SCALE(d.duration) + MARGINS.left), (Y_SCALE(d.complexity) + MARGINS.top))})                                                      
     mybar.classed("selected", function(d){
       return isBrushed(extent, 
-        ((X_SCALE+200)(d.duration) + MARGINS.left), (Y_SCALE(d.complexity) + MARGINS.top))})                                                           
+        (X_SCALE(d.duration) + MARGINS.left), (Y_SCALE(d.complexity) + MARGINS.top))})                                                           
 
 
 // brushing function, returns true or false if point is in selection area
