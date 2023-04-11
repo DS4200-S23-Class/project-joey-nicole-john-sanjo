@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html> 
+<html>
 
 <head>
     <meta charset=utf-8/>
@@ -27,7 +27,7 @@
         Association rating system, as well as genre and release year informa-
         tion, our tool will help users make more informed decisions about
         what to watch.</p>
-        
+
         <p>Our tool is designed for movie enthusiasts and the general public
         who are interested in understanding the history and evolution of film
         and TV culture. It will support two domain tasks: identifying which
@@ -52,12 +52,11 @@
 
     <div>
         <h2 class = "center">Background</h2>
-       
+
         <h3 class = "center" >Data</h3>
         The selected data comes from Kaggle, and is a compiled
         list of Netflix movies and TV shows, with related vari-
-        ables such as cast, director, release date, ratings, and more
-        (<ul><li><a href="https://www.kaggle.com/"></a></li></ul>). There
+        ables such as cast, director, release date, ratings, and more. There
         are no inherent biases in the dataset, other than not knowing the
         credibility of the Kaggle user who compiled the data. Ethical consid-
         erations could be social responsibility, however, there is no personal
@@ -66,7 +65,7 @@
 
         <p>To clean the dataset, we used Python to sift through missing
         values and omit unnecessary data.
-        Additionally, rows with null values were dropped. 
+        Additionally, rows with null values were dropped.
         We then filtered the data such that the only
         country included with data was the United States. These steps
         brought the row count from around 8,000, to roughly 1800. For
@@ -81,21 +80,21 @@
         genre, was just a singular column that contained one or more genres
         that the project was listed in. To better be able to manipulate the
         data, we found every type of genre listed in the rows, and created its
-        own column based on those findings, while still keeping the "listed in" column. 
-        The new rows now show a 1 or 0 (yes or no), if it was listed in that specific 
+        own column based on those findings, while still keeping the "listed in" column.
+        The new rows now show a 1 or 0 (yes or no), if it was listed in that specific
         genre or not. Finally, we created a secondary csv file called line.csv.
-        This was generated using data from the original csv to contain infomation 
-        neccessary to generate the line plot. There is a column for release year, 
+        This was generated using data from the original csv to contain infomation
+        neccessary to generate the line plot. There is a column for release year,
         a column for rating, and a column for the count. After cleaning, there were no unexpected
         values or outliers.</p>
 
-        The design of the visualization changed after the submission of pm2. Starting at pm-03 the plan was there would be 
-        three visuals in total that all relate to some aspect of movies. The lineplot would show the number 
+        The design of the visualization changed after the submission of pm2. Starting at pm-03 the plan was there would be
+        three visuals in total that all relate to some aspect of movies. The lineplot would show the number
         of movies released over the years grouped by rating. Then you can hover over each line to see what it
-        represents via tooltick. The bar chart shows the average duration of movies grouped by rating. Then the final 
+        represents via tooltick. The bar chart shows the average duration of movies grouped by rating. Then the final
         part of the visual that has not been implemented will appear when you click on a specific year from the line graph,
-        and will show the average complexity of movies from each genre of that year in a movie ticket shape. 
-        This will provide important information about movies based on the rating they recieved. 
+        and will show the average complexity of movies from each genre of that year in a movie ticket shape.
+        This will provide important information about movies based on the rating they recieved.
         <p>This design then changed significantly after pm-03 due to the fact that we had to restart the code to fix linking. The design kept the scatterplot, as well as the tickets (just as an added bonus for the theme), but added a bar plot of the Ratings, looking at their average duration. This was then linked to a scatterplot showing the duration by complexity for all movies. You are able to brush over points in the scatterplot to highlight what the associated rating is in the bar chart. The bar chart also shows a tooltip of what genres are included.</p>
 
         <p> "Movies Released by Year per Rating": This graph looks at all ratings included in the dataset, with an emphasis on how much TV-MA contributes to the overall count of movies. Alongside the legend, the tooltip function helps identify which rating is which when hovering over.</p>
@@ -110,8 +109,23 @@
 
     <div>
         <h2 class = "center">Visualization</h2>
+        <div class="position-filter">
+              <h4>Filter By Rating</h4>
+
+              <input class="position-button" id="PG" value="PG" type="checkbox" checked="checked" onclick="togglePG()">PG</input>
+              <input class="position-button" id="PG-13" value="PG-13" type="checkbox" checked="checked" onclick="togglePG13()">PG-13</input>
+              <input class="position-button" id="R" value="R" type="checkbox" checked="checked" onclick="toggleR()">R</input>
+              <input class="position-button" id="TV-14" value="TV-14" type="checkbox" checked="checked" onclick="toggleTV14()">TV-14</input>
+              <input class="position-button" id="TV-MA" value="TV-MA" type="checkbox" checked="checked" onclick="toggleTVMA()">TV-MA</input>
+              <input class="position-button" id="TV-PG" value="TV-PG" type="checkbox" checked="checked" onclick="toggleTVPG()">TV-PG</input>
+
+            </div>
         <h4 class = "center">Movies Released Per Year By Rating</h4>
-        <div id='vis1'> 
+        <div id='vis1'>
+                </div>
+
+</div>
+
             <p>  </p>
             <div class = "legend"></div>
 
@@ -120,12 +134,12 @@
 
     </div>
 
-    
+
 <div id= "vis45", class = "flex-container">
 
     <div id = "vis4" class = "flex-child"> </div>
         <div class = "legend"> </div>
-   
+
     <div id = "vis5" class = "flex-child">
     </div>
 </div>
@@ -180,15 +194,4 @@
 
 </html>
 
-// create new column with count of rating; 
-// make dataset link clickable 
-// make scatter wider 
-// maybe filter to 1980
-// commenting code 
-// Acknoledgements
-
-
-//John: Final Design
-// Nicole: Design Process
-// Sanjo/Joey : Conclusion
 

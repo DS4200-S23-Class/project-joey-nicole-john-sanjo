@@ -1,16 +1,15 @@
-
-// set frames and dimensions 
+// set frames and dimensions
 const FRAME_HEIGHT = 500;
-const FRAME_WIDTH = 500; 
+const FRAME_WIDTH = 500;
 
 const LINEFRAME_WIDTH = 1000;
 
 const MARGINS = {left: 50, right: 50, top: 50, bottom: 50};
 
 const VIS_HEIGHT = FRAME_HEIGHT - MARGINS.top - MARGINS.bottom;
-const VIS_WIDTH = FRAME_WIDTH - MARGINS.left - MARGINS.right; 
+const VIS_WIDTH = FRAME_WIDTH - MARGINS.left - MARGINS.right;
 
-const LINEVIS_WIDTH = LINEFRAME_WIDTH - MARGINS.left - MARGINS.right; 
+const LINEVIS_WIDTH = LINEFRAME_WIDTH - MARGINS.left - MARGINS.right;
 
 const TICK_HEIGHT = 200;
 const TICK_WIDTH = 400;
@@ -23,10 +22,10 @@ const FRAME1 = d3.select("#vis1")
 .attr('id', 'spsvg')
 .attr("class", "frame");
 
-
+const filters = document.getElementById("filterTable");
 function display_rows(){
 
-  // reset graph if new points are being added 
+  // reset graph if new points are being added
   document.getElementById("spsvg").innerHTML = '';
   d3.csv("DONE.csv").then((data) => {
 
@@ -40,9 +39,71 @@ function display_rows(){
 }
 display_rows();
 
+let selectedPG = true;
+let selectedPG13 = true;
+let selectedR = true;
+let selectedTV14 = true;
+let selectedTVMA = true;
+let selectedTVPG = true;
+console.log(selectedPG, selectedPG13, selectedR, selectedTV14, selectedTVMA, selectedTVPG);
+
+function togglePG() {
+  selectedPG = !selectedPG;
+  console.log(selectedPG);
+  build_line_plot();
+}
+
+function togglePG13() {
+  selectedPG13 = !selectedPG13;
+  build_line_plot();
+}
+
+function toggleR() {
+  selectedR = !selectedR;
+  build_line_plot();
+}
+
+function toggleTV14() {
+  selectedTV14 = !selectedTV14;
+  build_line_plot();
+}
+
+function toggleTVMA() {
+  selectedTVMA = !selectedTVMA;
+  build_line_plot();
+}
+
+function toggleTVPG() {
+  selectedTVPG = !selectedTVPG;
+  build_line_plot();
+}
+
 function build_line_plot(addpoints, newdata) {
 
   d3.csv("line.csv").then((data) => {
+  // Filter data to include only user-selected ratings
+  let selected_ratings = [];
+  if (selectedPG) {
+    selected_ratings.push('PG');
+  }
+  if (selectedPG13) {
+    selected_ratings.push('PG-13');
+  }
+  if (selectedR) {
+    selected_ratings.push('R');
+  }
+  if (selectedTV14) {
+    selected_ratings.push('TV-14');
+  }
+  if (selectedTVMA) {
+    selected_ratings.push('TV-MA');
+  }
+  if (selectedTVPG) {
+    selected_ratings.push('TV-PG');
+  }
+
+  // filter the data based on the selected ratings
+  const filtered_data = data.filter(d => selected_ratings.includes(d.rating));
 
   // creates a tooltip
     let Tooltip = d3.select("#vis1")
@@ -75,36 +136,70 @@ function build_line_plot(addpoints, newdata) {
       Tooltip
       .style("opacity", 0);
     }
-    
-    const grouped = d3.group(data, d => d.rating); 
 
-
+    const grouped = d3.group(filtered_data, d => d.rating);
+    console.log(grouped);
 
   // Add X axis --> it is a date format
     const x_scale = d3.scaleLinear()
-    .domain(d3.extent(data, function(d) { return d.release_year; }))
+    .domain(d3.extent(filtered_data, function(d) { return d.release_year; }))
     .range([MARGINS.left, LINEVIS_WIDTH]);
     FRAME1.append("g")
-    .attr("transform", "translate(" + 0 + 
-      "," + (VIS_HEIGHT + MARGINS.bottom) + ")") 
+    .attr("transform", "translate(" + 0 +
+      "," + (VIS_HEIGHT + MARGINS.bottom) + ")")
     .call(d3.axisBottom(x_scale).ticks(10));
 
    // Add Y axis
     const y_scale = d3.scaleLinear()
   .domain([0, 150]) // fix this
   .range([VIS_HEIGHT+MARGINS.top, 0]);
-  FRAME1.append("g").attr("transform", "translate(" + MARGINS.left + 
-   "," + (0) + ")") 
+  FRAME1.append("g").attr("transform", "translate(" + MARGINS.left +
+   "," + (0) + ")")
   .call(d3.axisLeft(y_scale));
+
+  const range = [];
+  const domain = [];
+  if (selectedPG) {
+    range.push('#e41a1c');
+    domain.push('PG');
+  }
+  if (selectedPG13) {
+    range.push('#377eb8');
+    domain.push('PG-13');
+  }
+  if (selectedR) {
+    range.push('#4daf4a');
+    domain.push('R');
+  }
+  if (selectedTV14) {
+    range.push('#984ea3');
+    domain.push('TV-14');
+  }
+  if (selectedTVMA) {
+    range.push('#ff7f00');
+    domain.push('TV-MA');
+  }
+  if (selectedTVPG) {
+    range.push('black');
+    domain.push('TV-PG');
+  }
+
+  console.log(range);
+  console.log(domain);
 
   // color palette
   const color = d3.scaleOrdinal()
-  .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+  .range(range)
+  .domain(domain);
+
+
+
 
   // Draw the line
   FRAME1.selectAll(".line")
   .data(grouped)
   .join("path")
+  .attr("class", "line")
   .attr("fill", "none")
   .attr("stroke", function(d){ return color(d[0]) })
   .attr("stroke-width", 1.5)
@@ -116,15 +211,15 @@ function build_line_plot(addpoints, newdata) {
   .on("mouseover", mouseover)
   .on("mousemove", mousemove)
   .on("mouseleave", mouseleave);
-  
-  
-  //Create Title 
+
+
+  //Create Title
   FRAME1.append("text")
   .attr("x", LINEVIS_WIDTH/2)
   .attr("y", 20)
   .style("text-anchor", "middle");
 
-  //Create X axis label   
+  //Create X axis label
   FRAME1.append("text")
   .attr("x", LINEVIS_WIDTH / 2 )
   .attr("y",  y_scale(0) + 40 )
@@ -136,30 +231,64 @@ function build_line_plot(addpoints, newdata) {
   .attr("transform", "rotate(-90)")
   .attr("y", 20 )
   .attr("x", -200)
-  
+
   .style("text-anchor", "middle")
-  .text("Number of Releases"); 
+  .text("Number of Releases");
 
-// legend 
-  FRAME1.append("circle").attr("cx",100).attr("cy",40).attr("r", 6).style("fill", "#e41a1c");
-  FRAME1.append("text").attr("x", 120).attr("y", 40).text("PG").style("font-size", "15px").attr("alignment-baseline","middle");
+// legend
+  if (selectedPG){
+    FRAME1.append("circle").attr("cx",100).attr("cy",40).attr("r", 6).style("fill", "#e41a1c");
+    FRAME1.append("text").attr("x", 120).attr("y", 40).text("PG").style("font-size", "15px").attr("alignment-baseline","middle");
+  }
+  if (selectedPG13){
+    FRAME1.append("circle").attr("cx",100).attr("cy",60).attr("r", 6).style("fill", "#377eb8");
+    FRAME1.append("text").attr("x", 120).attr("y", 60).text("PG-13").style("font-size", "15px").attr("alignment-baseline","middle")  ;
+  }
+  if (selectedR){
+    FRAME1.append("circle").attr("cx",100).attr("cy",80).attr("r", 6).style("fill", "#4daf4a");
+    FRAME1.append("text").attr("x", 120).attr("y", 80).text("R").style("font-size", "15px").attr("alignment-baseline","middle");
+  }
+  if (selectedTV14){
+    FRAME1.append("circle").attr("cx",100).attr("cy",100).attr("r", 6).style("fill", "#984ea3");
+    FRAME1.append("text").attr("x", 120).attr("y", 100).text("TV-14").style("font-size", "15px").attr("alignment-baseline","middle")  ;
+  }
+  if (selectedTVMA){
+    FRAME1.append("circle").attr("cx",100).attr("cy",120).attr("r", 6).style("fill", "#ff7f00");
+    FRAME1.append("text").attr("x", 120).attr("y", 120).text("TV-MA").style("font-size", "15px").attr("alignment-baseline","middle");
+  }
+  if (selectedTVPG){
+    FRAME1.append("circle").attr("cx",100).attr("cy",140).attr("r", 6).style("fill", "black");
+    FRAME1.append("text").attr("x", 120).attr("y", 140).text("TV-PG").style("font-size", "15px").attr("alignment-baseline","middle")  ;
+}
+  //ADDED THESE FOR THE SELECTION BUTTONS
+const zoom = d3.zoom()
+      .scaleExtent([.5, 20])  // This control how much you can unzoom (x0.5) and zoom (x20)
+      .extent([[0, 0], [LINEVIS_WIDTH, FRAME_HEIGHT]])
+      .on("zoom", updateChart);
 
-  FRAME1.append("circle").attr("cx",100).attr("cy",60).attr("r", 6).style("fill", "#377eb8");
-  FRAME1.append("text").attr("x", 120).attr("y", 60).text("PG-13").style("font-size", "15px").attr("alignment-baseline","middle")  ; 
-  
-  FRAME1.append("circle").attr("cx",100).attr("cy",80).attr("r", 6).style("fill", "#4daf4a");
-  FRAME1.append("text").attr("x", 120).attr("y", 80).text("R").style("font-size", "15px").attr("alignment-baseline","middle");
+FRAME1.append("rect")
+      .attr("width", LINEVIS_WIDTH)
+      .attr("height", FRAME_HEIGHT)
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .attr('transform', 'translate(' + MARGINS.left + ',' + MARGINS.top + ')')
+      .call(zoom);
+        function updateChart() {
 
-  FRAME1.append("circle").attr("cx",100).attr("cy",100).attr("r", 6).style("fill", "#984ea3");
-  FRAME1.append("text").attr("x", 120).attr("y", 100).text("TV-14").style("font-size", "15px").attr("alignment-baseline","middle")  ; 
+    // recover the new scale
+    let newX = d3.event.transform.rescaleX(x);
+    let newY = d3.event.transform.rescaleY(y);
 
-  FRAME1.append("circle").attr("cx",100).attr("cy",120).attr("r", 6).style("fill", "#ff7f00");
-  FRAME1.append("text").attr("x", 120).attr("y", 120).text("TV-MA").style("font-size", "15px").attr("alignment-baseline","middle");
+    // update axes with these new boundaries
+    xAxis.call(d3.axisBottom(newX))
+    yAxis.call(d3.axisLeft(newY))
 
-  FRAME1.append("circle").attr("cx",100).attr("cy",140).attr("r", 6).style("fill", "#ffff33");
-  FRAME1.append("text").attr("x", 120).attr("y", 140).text("TV-PG").style("font-size", "15px").attr("alignment-baseline","middle")  ; 
-  
-
+    // update circle position
+    scatter
+      .selectAll("circle")
+      .attr('cx', function(d) {return newX(d.date)})
+      .attr('cy', function(d) {return newY(d.Count)});
+  }
 });
 
 }
@@ -168,11 +297,11 @@ build_line_plot();
 
 function produce_tickets (rating){
 //build frame for bar chart
-  const FRAME2 = d3.select("#vis2") 
-  .append("svg") 
-  .attr("height", FRAME_HEIGHT)   
+  const FRAME2 = d3.select("#vis2")
+  .append("svg")
+  .attr("height", FRAME_HEIGHT)
   .attr("width", FRAME_WIDTH)
-  .attr("class", "frame"); 
+  .attr("class", "frame");
 
 
 
@@ -186,7 +315,7 @@ function produce_tickets (rating){
     .range([VIS_HEIGHT, 0])
     .domain([0, 50]);
 
-// filter the data based on the ratings 
+// filter the data based on the ratings
     const filtered_data = data.filter(d => ["G", "PG", "PG-13", "R", "NR"].includes(d.rating));
 
 // group the data by rating
@@ -204,7 +333,7 @@ function produce_tickets (rating){
     case "G":
       {
         document.getElementById("G-score").style.display = "block";
-        document.getElementById("G-score-value").innerHTML = mean_complexity_scores['G']; 
+        document.getElementById("G-score-value").innerHTML = mean_complexity_scores['G'];
         document.getElementById("button").style.display = "block";
         break;
       }
@@ -247,18 +376,18 @@ default:{
 
 }
 
-// create frames 
-const FRAME_8 = d3.select("#vis4") 
-.append("svg") 
-.attr("height", FRAME_HEIGHT)   
+// create frames
+const FRAME_8 = d3.select("#vis4")
+.append("svg")
+.attr("height", FRAME_HEIGHT)
 .attr("width", FRAME_WIDTH+200)
 .attr("id", "spsvg")
 .attr("class", "frame");
 
 
-const FRAME_9 = d3.select("#vis5") 
-.append("svg") 
-.attr("height", FRAME_HEIGHT)   
+const FRAME_9 = d3.select("#vis5")
+.append("svg")
+.attr("height", FRAME_HEIGHT)
 .attr("width", FRAME_WIDTH)
 .attr("id", "spsvg")
 .attr("class", "frame");
@@ -327,7 +456,7 @@ d3.csv("DONE.csv").then((data) => {
     .style("opacity", 0);
   }
 
-// plot scatterplot 
+// plot scatterplot
   let mycirc1 = FRAME_8.selectAll(".point")
   .data(data)
   .enter()
@@ -359,12 +488,12 @@ d3.csv("DONE.csv").then((data) => {
 
   })
 
-  .attr("id", d => {return d.rating}); 
+  .attr("id", d => {return d.rating});
 
 
 
 
-// plot bar plot 
+// plot bar plot
   let mybar = FRAME_9.selectAll(".bar")
   .data(data)
   .enter().append("rect")
@@ -399,7 +528,7 @@ d3.csv("DONE.csv").then((data) => {
 
   // axes and texts
   FRAME_8.append("g")
-  .attr("transform", "translate(" + 
+  .attr("transform", "translate(" +
     MARGINS.left + "," + (MARGINS.top + VIS_HEIGHT) + ")")
   .call(d3.axisBottom(X_SCALE).ticks(8));
 
@@ -408,7 +537,7 @@ d3.csv("DONE.csv").then((data) => {
   .attr("y", 20 )
   .attr("x", -300)
   .style("fill", "black")
-  .text("Complexity"); 
+  .text("Complexity");
 
 
   FRAME_8.append("text")
@@ -419,7 +548,7 @@ d3.csv("DONE.csv").then((data) => {
   .text("Duration (Minutes)");
 
   FRAME_8.append("g")
-  .attr("transform", "translate(" + 
+  .attr("transform", "translate(" +
     MARGINS.left + "," + (MARGINS.top) + ")")
   .call(d3.axisLeft(Y_SCALE).ticks(15));
 
@@ -431,13 +560,13 @@ d3.csv("DONE.csv").then((data) => {
   .text("Complexity and Duration for All Movies");
 
 
-  FRAME_8.call( d3.brush()                 
-    .extent([[0,0],[FRAME_WIDTH, FRAME_HEIGHT]]) 
-    .on("start brush", updateChart) 
+  FRAME_8.call( d3.brush()
+    .extent([[0,0],[FRAME_WIDTH, FRAME_HEIGHT]])
+    .on("start brush", updateChart)
     )
 
   FRAME_9.append("g")
-  .attr("transform", "translate(" + 
+  .attr("transform", "translate(" +
     MARGINS.left+ "," + (MARGINS.top + VIS_HEIGHT) + ")")
   .call(d3.axisBottom(X_SCALE3).ticks(10));
 
@@ -446,11 +575,11 @@ d3.csv("DONE.csv").then((data) => {
   .attr("transform", "rotate(-90)")
   .attr("y", 20 )
   .attr("x", -300)
-  .text("Duration (Minutes)"); 
+  .text("Duration (Minutes)");
 
 // create y-axis
   FRAME_9.append("g")
-  .attr("transform", "translate(" + 
+  .attr("transform", "translate(" +
     MARGINS.left + "," + (MARGINS.top) + ")")
   .call(d3.axisLeft(Y_SCALE3));
 
@@ -473,11 +602,11 @@ d3.csv("DONE.csv").then((data) => {
     const extent = event.selection;
       // change the class of each point or bar if corresponding was brushed
     mycirc1.classed("selected", function(d){
-      return isBrushed(extent, 
-        (X_SCALE(d.duration) + MARGINS.left), (Y_SCALE(d.complexity) + MARGINS.top))})                                                      
+      return isBrushed(extent,
+        (X_SCALE(d.duration) + MARGINS.left), (Y_SCALE(d.complexity) + MARGINS.top))})
     mybar.classed("selected", function(d){
-      return isBrushed(extent, 
-        (X_SCALE(d.duration) + MARGINS.left), (Y_SCALE(d.complexity) + MARGINS.top))})                                                           
+      return isBrushed(extent,
+        (X_SCALE(d.duration) + MARGINS.left), (Y_SCALE(d.complexity) + MARGINS.top))})
 
 
 // brushing function, returns true or false if point is in selection area
@@ -492,18 +621,18 @@ d3.csv("DONE.csv").then((data) => {
 
   };});
 
-// Legends for linked bar chart and scatter plot 
+// Legends for linked bar chart and scatter plot
 FRAME_8.append("circle").attr("cx",80).attr("cy",40).attr("r", 6).style("fill", "pink");
 FRAME_8.append("text").attr("x", 100).attr("y", 40).text("G").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
 
 FRAME_8.append("circle").attr("cx",80).attr("cy",60).attr("r", 6).style("fill", "lightblue");
-FRAME_8.append("text").attr("x", 100).attr("y", 60).text("PG").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ; 
+FRAME_8.append("text").attr("x", 100).attr("y", 60).text("PG").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ;
 
 FRAME_8.append("circle").attr("cx",80).attr("cy",80).attr("r", 6).style("fill", "lightgreen");
 FRAME_8.append("text").attr("x", 100).attr("y", 80).text("PG-13").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
 
 FRAME_8.append("circle").attr("cx",80).attr("cy",100).attr("r", 6).style("fill", "gold");
-FRAME_8.append("text").attr("x", 100).attr("y", 100).text("R").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ; 
+FRAME_8.append("text").attr("x", 100).attr("y", 100).text("R").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ;
 
 FRAME_8.append("circle").attr("cx",80).attr("cy",120).attr("r", 6).style("fill", "black");
 FRAME_8.append("text").attr("x", 100).attr("y", 120).text("NR").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
@@ -512,19 +641,19 @@ FRAME_9.append("circle").attr("cx",80).attr("cy",40).attr("r", 6).style("fill", 
 FRAME_9.append("text").attr("x", 100).attr("y", 40).text("G").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
 
 FRAME_9.append("circle").attr("cx",80).attr("cy",60).attr("r", 6).style("fill", "lightblue");
-FRAME_9.append("text").attr("x", 100).attr("y", 60).text("PG").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ; 
+FRAME_9.append("text").attr("x", 100).attr("y", 60).text("PG").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ;
 
 FRAME_9.append("circle").attr("cx",80).attr("cy",80).attr("r", 6).style("fill", "lightgreen");
 FRAME_9.append("text").attr("x", 100).attr("y", 80).text("PG-13").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
 
 FRAME_9.append("circle").attr("cx",80).attr("cy",100).attr("r", 6).style("fill", "gold");
-FRAME_9.append("text").attr("x", 100).attr("y", 100).text("R").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ; 
+FRAME_9.append("text").attr("x", 100).attr("y", 100).text("R").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black")  ;
 
 FRAME_9.append("circle").attr("cx",80).attr("cy",120).attr("r", 6).style("fill", "black");
 FRAME_9.append("text").attr("x", 100).attr("y", 120).text("NR").style("font-size", "15px").attr("alignment-baseline","middle").attr("fill", "black");
 
 
-// clicks for creating tickets based on rating selected. 
+// clicks for creating tickets based on rating selected.
 let hasBeenClickedG, hasBeenClickedPG, hasBeenClickedPG13, hasBeenClickedR, hasBeenClickedNR = false;
 
 function mouseClickEvent(event, d) {
@@ -546,7 +675,7 @@ function mouseClickEvent(event, d) {
       hasBeenClickedPG13 = true;
       produce_tickets(d.rating);
     }
-    break; 
+    break;
   case "R":
     if (!hasBeenClickedR){
       hasBeenClickedR = true;
@@ -564,7 +693,7 @@ function mouseClickEvent(event, d) {
 }
 
 function refreshClick() {
-  hasBeenClickedG = false; 
+  hasBeenClickedG = false;
   hasBeenClickedPG = false;
   hasBeenClickedPG13 = false;
   hasBeenClickedR = false;
