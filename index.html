@@ -1,159 +1,126 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset=utf-8/>
-    <link rel="stylesheet" type="text/css" href="style.css">
-
-    <script src="js/d3.v6.1.1/d3.min.js"></script>
-
-    <title class = "center"> Netlfix Movie Genre Popularity</title>
-</head>
-
-
-<body>
-
-    <h1>Analysis of Netflix Movie Genre Popularity in the United States</h1>
-
-    <div>
-        <h2 class = "center">Motivation</h2>
-        <p>The rise of streaming platforms like Netflix has led to an explosion
-        in the number of movies and TV shows available to the public. With
-        so much content to choose from, it can be overwhelming for viewers
-        to make informed decisions about what to watch. Our visualization
-        tool aims to address this problem by providing users with a way to
-        better understand the landscape of film and TV ratings and genres
-        throughout the years. By visualizing data about the Motion Picture
-        Association rating system, as well as genre and release year informa-
-        tion, our tool will help users make more informed decisions about
-        what to watch.</p>
-
-        <p>Our tool is designed for movie enthusiasts and the general public
-        who are interested in understanding the history and evolution of film
-        and TV culture. It will support two domain tasks: identifying which
-        genres tend to generate certain ratings and analyzing movie and
-        TV show ratings throughout the years. By supporting these tasks,
-        our tool will enable users to better understand the cultural trends
-        and shifts in the film and TV industry, and make more informed
-        decisions about what movies and TV shows to watch. </p>
-
-        This visualization tool will cater to movie enthusiasts and the general
-        public to better illustrate the progression of movie and TV show
-        ratings throughout the years, as well as Motion Picture Association
-        ratings and general film and TV show genres available on Netflix.
-        The tool will be able to display to the user the movie name, release
-        year, ratings, genre, and more. The user will also be able to interact
-        with the plot to select certain periods of interest, as well as
-        being able to select desired filters. By using this tool, the public
-        will be able to get a better understanding of the Motion Picture
-        Association rating system, as well as movie culture shifts throughout
-        the years.
-    </div>
-
-    <div>
-        <h2 class = "center">Background</h2>
-
-        <h3 class = "center" >Data</h3>
-        The selected data comes from Kaggle, and is a compiled
-        list of Netflix movies and TV shows, with related vari-
-        ables such as cast, director, release date, ratings, and more. There
-        are no inherent biases in the dataset, other than not knowing the
-        credibility of the Kaggle user who compiled the data. Ethical consid-
-        erations could be social responsibility, however, there is no personal
-        user data and the societal impacts of this dataset are low ethically
-        speaking.
-
-        <p>To clean the dataset, we used Python to sift through missing
-        values and omit unnecessary data.
-        Additionally, rows with null values were dropped.
-        We then filtered the data such that the only
-        country included with data was the United States. These steps
-        brought the row count from around 8,000, to roughly 1800. For
-        consistency purposes, The date column was then transformed into a
-        proper datetime format. The word "minutes" was also removed from
-        this column in order to have a cleaner appearance. A new column
-        for complexity was also added based on the original description
-        column, using the automated readability index, roughly based on
-        the character length of the description column. Then, the description
-        column was dropped, as it would not be relevant for our analyses
-        purposes. Finally, originally the 'listed in' column, referring to the
-        genre, was just a singular column that contained one or more genres
-        that the project was listed in. To better be able to manipulate the
-        data, we found every type of genre listed in the rows, and created its
-        own column based on those findings, while still keeping the "listed in" column.
-        The new rows now show a 1 or 0 (yes or no), if it was listed in that specific
-        genre or not. Finally, we created a secondary csv file called line.csv.
-        This was generated using data from the original csv to contain infomation
-        neccessary to generate the line plot. There is a column for release year,
-        a column for rating, and a column for the count. After cleaning, there were no unexpected
-        values or outliers.</p>
-
-        The design of the visualization changed after the submission of pm2. Starting at pm-03 the plan was there would be
-        three visuals in total that all relate to some aspect of movies. The lineplot would show the number
-        of movies released over the years grouped by rating. Then you can hover over each line to see what it
-        represents via tooltick. The bar chart shows the average duration of movies grouped by rating. Then the final
-        part of the visual that has not been implemented will appear when you click on a specific year from the line graph,
-        and will show the average complexity of movies from each genre of that year in a movie ticket shape.
-        This will provide important information about movies based on the rating they recieved.
-        <p>This design then changed significantly after pm-03 due to the fact that we had to restart the code to fix linking. The design kept the scatterplot, as well as the tickets (just as an added bonus for the theme), but added a bar plot of the Ratings, looking at their average duration. This was then linked to a scatterplot showing the duration by complexity for all movies. You are able to brush over points in the scatterplot to highlight what the associated rating is in the bar chart. The bar chart also shows a tooltip of what genres are included.</p>
-
-        <p> "Movies Released by Year per Rating": This graph looks at all ratings included in the dataset, with an emphasis on how much TV-MA contributes to the overall count of movies. Alongside the legend, the tooltip function helps identify which rating is which when hovering over.</p>
-
-        <p> "Complexity and Duration of All Movies": This graph looks at complexity by duration for all movies in the dataset. You can select via brushing as many points as you want to highlight in the neighboring bar graph which ratings from the main five utilized ratings (G, PG, PG-13, R, NR) are being seen.</p>
-
-        <p> "Average Duration for Each Genre": This graph, as explained prior, is connected to the scatterplot and shows the average duration of movies for each genre via Tooltip. </p>
-
-        <p> Movie Tickets: As an added bonus, we included movie tickets with average complexities for each genre. Click on a genre in the bar chart to see your ticket stub with the complexity average of that genre (you can click on as many as you want). Click the "clear output" button to restart and clear the tickets.</p>
-
-    </div>
-
-    <div>
-        <h2 class = "center">Visualization</h2>
-        <div class="position-filter">
-              <h4>Filter By Rating</h4>
-
-              <input class="position-button" id="PG" value="PG" type="checkbox" checked="checked" onclick="togglePG()">PG</input>
-              <input class="position-button" id="PG-13" value="PG-13" type="checkbox" checked="checked" onclick="togglePG13()">PG-13</input>
-              <input class="position-button" id="R" value="R" type="checkbox" checked="checked" onclick="toggleR()">R</input>
-              <input class="position-button" id="TV-14" value="TV-14" type="checkbox" checked="checked" onclick="toggleTV14()">TV-14</input>
-              <input class="position-button" id="TV-MA" value="TV-MA" type="checkbox" checked="checked" onclick="toggleTVMA()">TV-MA</input>
-              <input class="position-button" id="TV-PG" value="TV-PG" type="checkbox" checked="checked" onclick="toggleTVPG()">TV-PG</input>
-
-            </div>
-        <h4 class = "center">Movies Released Per Year By Rating</h4>
-        <div id='vis1'>
-                </div>
-
-</div>
-
-            <p>  </p>
-            <div class = "legend"></div>
-
+    <head>
+        <meta charset=utf-8/>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="js/d3.v6.1.1/d3.min.js"></script>
+        <title class = "center"> Netlfix Movie Genre Popularity</title>
+    </head>
+    <body>
+        <h1>Analysis of Netflix Movie Genre Popularity in the United States</h1>
+        <div>
+            <h2 class = "center">Motivation</h2>
+            <p>The rise of streaming platforms like Netflix has led to an explosion
+                in the number of movies and TV shows available to the public. With
+                so much content to choose from, it can be overwhelming for viewers
+                to make informed decisions about what to watch. Our visualization
+                tool aims to address this problem by providing users with a way to
+                better understand the landscape of film and TV ratings and genres
+                throughout the years. By visualizing data about the Motion Picture
+                Association rating system, as well as genre and release year informa-
+                tion, our tool will help users make more informed decisions about
+            what to watch.</p>
+            <p>Our tool is designed for movie enthusiasts and the general public
+                who are interested in understanding the history and evolution of film
+                and TV culture. It will support two domain tasks: identifying which
+                genres tend to generate certain ratings and analyzing movie and
+                TV show ratings throughout the years. By supporting these tasks,
+                our tool will enable users to better understand the cultural trends
+                and shifts in the film and TV industry, and make more informed
+            decisions about what movies and TV shows to watch. </p>
+            This visualization tool will cater to movie enthusiasts and the general
+            public to better illustrate the progression of movie and TV show
+            ratings throughout the years, as well as Motion Picture Association
+            ratings and general film and TV show genres available on Netflix.
+            The tool will be able to display to the user the movie name, release
+            year, ratings, genre, and more. The user will also be able to interact
+            with the plot to select certain periods of interest, as well as
+            being able to select desired filters. By using this tool, the public
+            will be able to get a better understanding of the Motion Picture
+            Association rating system, as well as movie culture shifts throughout
+            the years.
         </div>
-
-
+        <div>
+            <h2 class = "center">Background</h2>
+            <h3 class = "center" >Data</h3>
+            The selected data comes from Kaggle (<a href="https://www.kaggle.com/">Netflix Dataset</a>), and is a compiled
+            list of Netflix movies and TV shows, with related vari-
+            ables such as cast, director, release date, ratings, and more. There
+            are no inherent biases in the dataset, other than not knowing the
+            credibility of the Kaggle user who compiled the data. Ethical consid-
+            erations could be social responsibility, however, there is no personal
+            user data and the societal impacts of this dataset are low ethically
+            speaking.
+            <p>To clean the dataset, we used Python to sift through missing
+                values and omit unnecessary data.
+                Additionally, rows with null values were dropped.
+                We then filtered the data such that the only
+                country included with data was the United States. These steps
+                brought the row count from around 8,000, to roughly 1800. For
+                consistency purposes, The date column was then transformed into a
+                proper datetime format. The word "minutes" was also removed from
+                this column in order to have a cleaner appearance. A new column
+                for complexity was also added based on the original description
+                column, using the automated readability index, roughly based on
+                the character length of the description column. Then, the description
+                column was dropped, as it would not be relevant for our analyses
+                purposes. Finally, originally the 'listed in' column, referring to the
+                genre, was just a singular column that contained one or more genres
+                that the project was listed in. To better be able to manipulate the
+                data, we found every type of genre listed in the rows, and created its
+                own column based on those findings, while still keeping the "listed in" column.
+                The new rows now show a 1 or 0 (yes or no), if it was listed in that specific
+                genre or not. Finally, we created a secondary csv file called line.csv.
+                This was generated using data from the original csv to contain infomation
+                neccessary to generate the line plot. There is a column for release year,
+                a column for rating, and a column for the count. After cleaning, there were no unexpected
+            values or outliers.</p>
+            The design of the visualization changed after the submission of pm2. Starting at pm-03 the plan was there would be
+            three visuals in total that all relate to some aspect of movies. The lineplot would show the number
+            of movies released over the years grouped by rating. Then you can hover over each line to see what it
+            represents via tooltick. The bar chart shows the average duration of movies grouped by rating. Then the final
+            part of the visual that has not been implemented will appear when you click on a specific year from the line graph,
+            and will show the average complexity of movies from each genre of that year in a movie ticket shape.
+            This will provide important information about movies based on the rating they recieved.
+            <p>This design then changed significantly after pm-03 due to the fact that we had to restart the code to fix linking. The design kept the scatterplot, as well as the tickets (just as an added bonus for the theme), but added a bar plot of the Ratings, looking at their average duration. This was then linked to a scatterplot showing the duration by complexity for all movies. You are able to brush over points in the scatterplot to highlight what the associated rating is in the bar chart. The bar chart also shows a tooltip of what genres are included.</p>
+            <p> "Movies Released by Year per Rating": This graph looks at all ratings included in the dataset, with an emphasis on how much TV-MA contributes to the overall count of movies. Alongside the legend, the tooltip function helps identify which rating is which when hovering over.</p>
+            <p> "Complexity and Duration of All Movies": This graph looks at complexity by duration for all movies in the dataset. You can select via brushing as many points as you want to highlight in the neighboring bar graph which ratings from the main five utilized ratings (G, PG, PG-13, R, NR) are being seen.</p>
+            <p> "Average Duration for Each Genre": This graph, as explained prior, is connected to the scatterplot and shows the average duration of movies for each genre via Tooltip. </p>
+            <p> Movie Tickets: As an added bonus, we included movie tickets with average complexities for each genre. Click on a genre in the bar chart to see your ticket stub with the complexity average of that genre (you can click on as many as you want). Click the "clear output" button to restart and clear the tickets.</p>
+        </div>
+        <div>
+            <h2 class = "center">Visualization</h2>
+            <div class="position-filter">
+                <h4>Filter By Rating</h4>
+                <input class="position-button" id="PG" value="PG" type="checkbox" onclick="togglePG()">PG</input>
+                <input class="position-button" id="PG-13" value="PG-13" type="checkbox" onclick="togglePG13()">PG-13</input>
+                <input class="position-button" id="R" value="R" type="checkbox" onclick="toggleR()">R</input>
+                <input class="position-button" id="TV-14" value="TV-14" type="checkbox" onclick="toggleTV14()">TV-14</input>
+                <input class="position-button" id="TV-MA" value="TV-MA" type="checkbox" onclick="toggleTVMA()">TV-MA</input>
+                <input class="position-button" id="TV-PG" value="TV-PG" type="checkbox" onclick="toggleTVPG()">TV-PG</input>
+            </div>
+            <h4 class = "center">Movies Released Per Year By Rating</h4>
+            <div id='vis1'>
+            </div>
+        </div>
+        <p>  </p>
+        <div class = "legend"></div>
     </div>
-
-
+</div>
 <div id= "vis45", class = "flex-container">
-
     <div id = "vis4" class = "flex-child"> </div>
-        <div class = "legend"> </div>
-
+    <div class = "legend"> </div>
     <div id = "vis5" class = "flex-child">
     </div>
 </div>
-
-  <button id = "button" type='button' onclick="refreshClick()" style="display: none;">Clear output</button>
+<button id = "button" type='button' onclick="refreshClick()" style="display: none;">Clear output</button>
 <div id="vis3", class = "ticket-container">
-
-<div id="G-score" class="containers" style="display: none;">
-
-    <p class="heading">Ticket Stub: Admit 1</p>
-    <p class="heading">Average Complexity for Rated G Films</p>
-    <p id = "G-score-value" class="heading"></p>
-    <div class="inner1"></div>
-  </div>
+    <div id="G-score" class="containers" style="display: none;">
+        <p class="heading">Ticket Stub: Admit 1</p>
+        <p class="heading">Average Complexity for Rated G Films</p>
+        <p id = "G-score-value" class="heading"></p>
+        <div class="inner1"></div>
+    </div>
     <div id = "PG-score" class="containers" style="display: none;">
         <p class="heading">Ticket Stub: Admit 1</p>
         <p class = "heading"> Average Complexity for Rated PG Films</p>
@@ -166,7 +133,6 @@
         <p id = "PG-13-score-value" class="heading"></p>
         <div class="inner1"></div>
     </div>
-
     <div id = "R-score" class="containers" style="display: none;">
         <p class="heading">Ticket Stub: Admit 1</p>
         <p class = "heading"> Average Complexity for Rated R Films</p>
@@ -179,19 +145,15 @@
         <p class="heading" id = "NR-score-value"></p>
         <div class="inner1"></div>
     </div>
-
 </div>
-
 <h2>Acknowledgements</h2>
 <ul>
     <li><a href="https://www.kaggle.com/">Kaggle</a></li>
     <li><a href="https://d3-graph-gallery.com/graph/line_several_group.html">D3 Line Graph Example</a></li>
     <li><a href="https://d3js.org/">D3 Library</a></li>
+    <li><a href="https://stackoverflow.com/questions/48667194/cannot-read-property-transform-of-undefined">Transform Stack Overflow Solution</a></li>
+    <li><a href="https://d3-graph-gallery.com/graph/interactivity_zoom.html">Zoom Function</a></li>
 </ul>
-
 <script src='js/main.js'></script>
 </body>
-
 </html>
-
-
