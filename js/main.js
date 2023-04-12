@@ -43,7 +43,7 @@ function display_rows() {
   });
 }
 display_rows();
-
+// set up selection check boxes 
 let selectedPG = false;
 let selectedPG13 = false;
 let selectedR = false;
@@ -81,6 +81,7 @@ function toggleTVPG() {
   build_line_plot();
 }
 
+// build line plot
 function build_line_plot(addpoints, newdata) {
 
   d3.csv("line.csv").then((data) => {
@@ -162,6 +163,7 @@ function build_line_plot(addpoints, newdata) {
         "," + (0) + ")")
       .call(d3.axisLeft(y_scale));
 
+    // show lines for checked ones 
     const range = [];
     const domain = [];
     if (selectedPG) {
@@ -264,16 +266,15 @@ function build_line_plot(addpoints, newdata) {
 }
 
 build_line_plot();
-
+//produce tickets
 function produce_tickets(rating) {
-  //build frame for bar chart
   const FRAME2 = d3.select("#vis2")
     .append("svg")
     .attr("height", FRAME_HEIGHT)
     .attr("width", FRAME_WIDTH)
     .attr("class", "frame");
 
-
+// load in data 
 
   d3.csv("DONE.csv").then(function(data) {
 
