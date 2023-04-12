@@ -151,7 +151,8 @@ function build_line_plot(addpoints, newdata) {
     FRAME1.append("g")
       .attr("transform", "translate(" + 0 +
         "," + (VIS_HEIGHT + MARGINS.bottom) + ")")
-      .call(d3.axisBottom(x_scale).ticks(10));
+      .call(d3.axisBottom(x_scale).ticks(10))
+      .call(d3.axisBottom(x_scale).ticks(10).tickFormat(d3.format("d"))); /// CHANGE
 
     // Add Y axis
     const y_scale = d3.scaleLinear()
@@ -450,13 +451,13 @@ d3.csv("DONE.csv").then((data) => {
       if (d.rating === "G") {
         return "pink"
       } else if (d.rating === "PG") {
-        return "lightblue"
+        return "darkorange"
       } else if (d.rating === "PG-13") {
         return "lightgreen"
       } else if (d.rating === "R") {
         return "gold"
       } else {
-        return "black"
+        return "silver"
       }
 
 
@@ -494,13 +495,13 @@ d3.csv("DONE.csv").then((data) => {
       if (d.rating === "G") {
         return "pink"
       } else if (d.rating === "PG") {
-        return "lightblue"
+        return "darkorange"
       } else if (d.rating === "PG-13") {
         return "lightgreen"
       } else if (d.rating === "R") {
         return "gold"
       } else {
-        return "black"
+        return "silver"
       }
 
 
@@ -612,7 +613,7 @@ d3.csv("DONE.csv").then((data) => {
 FRAME_8.append("circle").attr("cx", 80).attr("cy", 40).attr("r", 6).style("fill", "pink");
 FRAME_8.append("text").attr("x", 100).attr("y", 40).text("G").style("font-size", "15px").attr("alignment-baseline", "middle").attr("fill", "black");
 
-FRAME_8.append("circle").attr("cx", 80).attr("cy", 60).attr("r", 6).style("fill", "lightblue");
+FRAME_8.append("circle").attr("cx", 80).attr("cy", 60).attr("r", 6).style("fill", "darkorange");
 FRAME_8.append("text").attr("x", 100).attr("y", 60).text("PG").style("font-size", "15px").attr("alignment-baseline", "middle").attr("fill", "black");
 
 FRAME_8.append("circle").attr("cx", 80).attr("cy", 80).attr("r", 6).style("fill", "lightgreen");
@@ -621,13 +622,13 @@ FRAME_8.append("text").attr("x", 100).attr("y", 80).text("PG-13").style("font-si
 FRAME_8.append("circle").attr("cx", 80).attr("cy", 100).attr("r", 6).style("fill", "gold");
 FRAME_8.append("text").attr("x", 100).attr("y", 100).text("R").style("font-size", "15px").attr("alignment-baseline", "middle").attr("fill", "black");
 
-FRAME_8.append("circle").attr("cx", 80).attr("cy", 120).attr("r", 6).style("fill", "black");
+FRAME_8.append("circle").attr("cx", 80).attr("cy", 120).attr("r", 6).style("fill", "silver");
 FRAME_8.append("text").attr("x", 100).attr("y", 120).text("NR").style("font-size", "15px").attr("alignment-baseline", "middle").attr("fill", "black");
 
 FRAME_9.append("circle").attr("cx", 80).attr("cy", 40).attr("r", 6).style("fill", "pink");
 FRAME_9.append("text").attr("x", 100).attr("y", 40).text("G").style("font-size", "15px").attr("alignment-baseline", "middle").attr("fill", "black");
 
-FRAME_9.append("circle").attr("cx", 80).attr("cy", 60).attr("r", 6).style("fill", "lightblue");
+FRAME_9.append("circle").attr("cx", 80).attr("cy", 60).attr("r", 6).style("fill", "darkorange");
 FRAME_9.append("text").attr("x", 100).attr("y", 60).text("PG").style("font-size", "15px").attr("alignment-baseline", "middle").attr("fill", "black");
 
 FRAME_9.append("circle").attr("cx", 80).attr("cy", 80).attr("r", 6).style("fill", "lightgreen");
@@ -636,7 +637,7 @@ FRAME_9.append("text").attr("x", 100).attr("y", 80).text("PG-13").style("font-si
 FRAME_9.append("circle").attr("cx", 80).attr("cy", 100).attr("r", 6).style("fill", "gold");
 FRAME_9.append("text").attr("x", 100).attr("y", 100).text("R").style("font-size", "15px").attr("alignment-baseline", "middle").attr("fill", "black");
 
-FRAME_9.append("circle").attr("cx", 80).attr("cy", 120).attr("r", 6).style("fill", "black");
+FRAME_9.append("circle").attr("cx", 80).attr("cy", 120).attr("r", 6).style("fill", "silver");
 FRAME_9.append("text").attr("x", 100).attr("y", 120).text("NR").style("font-size", "15px").attr("alignment-baseline", "middle").attr("fill", "black");
 
 
