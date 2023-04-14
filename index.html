@@ -4,7 +4,7 @@
         <meta charset=utf-8/>
         <link rel="stylesheet" type="text/css" href="style.css">
         <script src="js/d3.v6.1.1/d3.min.js"></script>
-        <title class = "center"> Netlfix Movie Genre Popularity</title>
+        <title class = "center"> Netlfix Movie Rating Popularity</title>
     </head>
     <body>
         <h1>Analysis of Netflix Movie Genre Popularity in the United States</h1>
@@ -15,7 +15,7 @@
                 so much content to choose from, it can be overwhelming for viewers
                 to make informed decisions about what to watch. Our visualization
                 tool aims to address this problem by providing users with a way to
-                better understand the landscape of film ratings and genres
+                better understand the landscape of film ratings and ratings
                 throughout the years. By visualizing data about the Motion Picture
                 Association rating system, as well as genre and release year informa-
                 tion, our tool will help users make more informed decisions about
@@ -29,7 +29,7 @@
             This visualization tool will cater to movie enthusiasts and the general
             public to better illustrate the progression of movie
             ratings throughout the years, as well as Motion Picture Association
-            ratings and general film genres available on Netflix.
+            ratings and general film ratings available on Netflix.
             The tool will be able to display to the user the movie name, release
             year, ratings, genre, and more. The user will also be able to interact
             with the plot to select certain periods of interest, as well as
@@ -63,7 +63,7 @@
                 the character length of the description column. Then, the description
                 column was dropped, as it would not be relevant for our analyses
                 purposes. Finally, originally the 'listed in' column, referring to the
-                genre, was just a singular column that contained one or more genres
+                genre, was just a singular column that contained one or more ratings
                 that the project was listed in. To better be able to manipulate the
                 data, we found every type of genre listed in the rows, and created its
                 own column based on those findings, while still keeping the "listed in" column.
@@ -80,7 +80,7 @@
             part of the visual that has not been implemented will appear when you click on a specific year from the line graph,
             and will show the average complexity of movies from each genre of that year in a movie ticket shape.
             This will provide important information about movies based on the rating they recieved.
-            <p>This design then changed significantly after pm-03 due to the fact that we had to restart the code to fix linking. The design kept the scatterplot, as well as the tickets (just as an added bonus for the theme), but added a bar plot of the Ratings, looking at their average duration. This was then linked to a scatterplot showing the duration by complexity for all movies. You are able to brush over points in the scatterplot to highlight what the associated rating is in the bar chart. The bar chart also shows a tooltip of what genres are included.</p>
+            <p>This design then changed significantly after pm-03 due to the fact that we had to restart the code to fix linking. The design kept the scatterplot, as well as the tickets (just as an added bonus for the theme), but added a bar plot of the Ratings, looking at their average duration. This was then linked to a scatterplot showing the duration by complexity for all movies. You are able to brush over points in the scatterplot to highlight what the associated rating is in the bar chart. The bar chart also shows a tooltip of what ratings are included.</p>
             <p> "Movies Released by Year per Rating": This graph looks at all ratings included in the dataset, with an emphasis on how much TV-MA contributes to the overall count of movies. Alongside the legend, the tooltip function helps identify which rating is which when hovering over.</p>
             <p> "Complexity and Duration of All Movies": This graph looks at complexity by duration for all movies in the dataset. You can select via brushing as many points as you want to highlight in the neighboring bar graph which ratings from the main five utilized ratings (G, PG, PG-13, R, NR) are being seen.</p>
             <p> "Average Duration for Each Genre": This graph, as explained prior, is connected to the scatterplot and shows the average duration of movies for each genre via Tooltip. </p>
