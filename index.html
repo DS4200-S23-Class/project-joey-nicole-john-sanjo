@@ -7,7 +7,7 @@
         <title class = "center"> Netlfix Movie Rating Popularity</title>
     </head>
     <body>
-        <h1>Analysis of Netflix Movie Genre Popularity in the United States</h1>
+        <h1>Analysis of Netflix Movie Rating Popularity in the United States</h1>
         <div>
             <h2 class = "center">Motivation</h2>
             <p>The rise of streaming platforms like Netflix has led to an explosion
@@ -17,8 +17,8 @@
                 tool aims to address this problem by providing users with a way to
                 better understand the landscape of film ratings and ratings
                 throughout the years. By visualizing data about the Motion Picture
-                Association rating system, as well as genre and release year informa-
-                tion, our tool will help users make more informed decisions about
+                Association rating system, as well the movies complexity and duration information
+                , our tool will help users make more informed decisions about
             what to watch.</p>
             <p>Our tool is designed for movie enthusiasts and the general public who are interested in 
                 understanding the history and evolution of film culture.It will support two domain tasks:
@@ -31,7 +31,7 @@
             ratings throughout the years, as well as Motion Picture Association
             ratings and general film ratings available on Netflix.
             The tool will be able to display to the user the movie name, release
-            year, ratings, genre, and more. The user will also be able to interact
+            year, ratings, and more. The user will also be able to interact
             with the plot to select certain periods of interest, as well as
             being able to select desired filters. By using this tool, the public
             will be able to get a better understanding of the Motion Picture
@@ -78,13 +78,13 @@
             of movies released over the years grouped by rating. Then you can hover over each line to see what it
             represents via tooltick. The bar chart shows the average duration of movies grouped by rating. Then the final
             part of the visual that has not been implemented will appear when you click on a specific year from the line graph,
-            and will show the average complexity of movies from each genre of that year in a movie ticket shape.
+            and will show the average complexity of movies from each rating of that year in a movie ticket shape.
             This will provide important information about movies based on the rating they recieved.
             <p>This design then changed significantly after pm-03 due to the fact that we had to restart the code to fix linking. The design kept the scatterplot, as well as the tickets (just as an added bonus for the theme), but added a bar plot of the Ratings, looking at their average duration. This was then linked to a scatterplot showing the duration by complexity for all movies. You are able to brush over points in the scatterplot to highlight what the associated rating is in the bar chart. The bar chart also shows a tooltip of what ratings are included.</p>
             <p> "Movies Released by Year per Rating": This graph looks at all ratings included in the dataset, with an emphasis on how much TV-MA contributes to the overall count of movies. Alongside the legend, the tooltip function helps identify which rating is which when hovering over.</p>
             <p> "Complexity and Duration of All Movies": This graph looks at complexity by duration for all movies in the dataset. You can select via brushing as many points as you want to highlight in the neighboring bar graph which ratings from the main five utilized ratings (G, PG, PG-13, R, NR) are being seen.</p>
-            <p> "Average Duration for Each Genre": This graph, as explained prior, is connected to the scatterplot and shows the average duration of movies for each genre via Tooltip. </p>
-            <p> Movie Tickets: As an added bonus, we included movie tickets with average complexities for each genre. Click on a genre in the bar chart to see your ticket stub with the complexity average of that genre (you can click on as many as you want). Click the "clear output" button to restart and clear the tickets.</p>
+            <p> "Average Duration for Each Rating": This graph, as explained prior, is connected to the scatterplot and shows the average duration of movies for each rating via Tooltip. </p>
+            <p> Movie Tickets: As an added bonus, we included movie tickets with average complexities for each rating. Click on a rating in the bar chart to see your ticket stub with the complexity average of that rating (you can click on as many as you want). Click the "clear output" button to restart and clear the tickets.</p>
         </div>
         <div>
             <h2 class = "center">Visualization</h2>
