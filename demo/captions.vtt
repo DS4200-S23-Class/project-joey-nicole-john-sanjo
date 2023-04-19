@@ -1,0 +1,63 @@
+WEBVTT
+Kind: captions
+Language: en
+
+00:00:00.300 --> 00:00:04.260
+analysis of Netflix movie ratings in the U.S
+
+00:00:04.260 --> 00:00:13.200
+here if I scroll down past our details and get to our visualization section our first&nbsp;
+one up is the count of movies released per&nbsp;&nbsp;
+
+00:00:13.200 --> 00:00:20.400
+year since 1980 grouped by movie rating so up&nbsp;
+here I can click on as many or as little of the&nbsp;&nbsp;
+
+00:00:20.400 --> 00:00:27.660
+rating groups as I want to look at them side&nbsp;
+by side over the years I can also hover over&nbsp;&nbsp;
+
+00:00:27.660 --> 00:00:34.320
+each line to better be able to see which movie&nbsp;
+group I'm actually looking at for these lines&nbsp;&nbsp;
+
+00:00:35.760 --> 00:00:41.340
+scrolling down we have our scatter plot that&nbsp;
+is looking at complexity by duration for all&nbsp;&nbsp;
+
+00:00:41.340 --> 00:00:50.700
+movies but here we're grouping the Same by rating&nbsp;
+but we're just looking at your typical G PG PG-13&nbsp;&nbsp;
+
+00:00:50.700 --> 00:00:58.980
+Etc movie ratings and I can highlight over and it&nbsp;
+will highlight the corresponding bar on the bar&nbsp;&nbsp;
+
+00:00:58.980 --> 00:01:07.620
+plot to the right and what the bar pod is looking&nbsp;
+at is it's grouping again by the same movie&nbsp;&nbsp;
+
+00:01:07.620 --> 00:01:14.580
+ratings but it's looking at the average duration&nbsp;
+for all the movies in that rating group and if I&nbsp;&nbsp;
+
+00:01:14.580 --> 00:01:20.760
+hover over I can look at exactly how many movies&nbsp;
+are in that group and exactly what that average&nbsp;&nbsp;
+
+00:01:20.760 --> 00:01:28.680
+duration is and I can look at this for all of our&nbsp;
+movie rating groups as an added bonus I can also&nbsp;&nbsp;
+
+00:01:28.680 --> 00:01:37.260
+click on one of these and it will pop out a movie&nbsp;
+ticket for us so if I click on PG13 it's going to&nbsp;&nbsp;
+
+00:01:37.260 --> 00:01:43.380
+pop out of movie ticket stub that shows us the&nbsp;
+average complexity for all of the movies in that&nbsp;&nbsp;
+
+00:01:43.380 --> 00:01:49.860
+rating group and I can do this for all of these&nbsp;
+and when I'm done I can just clear the output
+
